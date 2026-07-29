@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "typecheck": "cd apps/web && npx tsc --noEmit",
+    "test": "playwright test",
     "preview": "vite preview"
   },
   "dependencies": {

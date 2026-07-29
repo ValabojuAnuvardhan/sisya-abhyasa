@@ -1,9 +1,10 @@
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "Sisya Abhyasa API"
     environment: str = "development"
-    database_url: str = "postgresql+psycopg://localhost:5432/sisya"
+    database_url: str = os.getenv("DATABASE_URL") or os.getenv("SISYA_DATABASE_URL") or "sqlite:///./test.db"
     frontend_origin: str = "http://localhost:3000"
     allow_dev_auth: bool = False
     gemini_api_key: str | None = None

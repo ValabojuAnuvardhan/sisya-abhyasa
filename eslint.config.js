@@ -6,13 +6,13 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores([
-    'dist/**',
-    '.next/**',
-    'apps/web/.next/**',
-    'playwright-report/**',
-    'test-results/**',
-    'coverage/**',
-    'node_modules/**',
+    '**/dist/**',
+    '**/.next/**',
+    '**/playwright-report/**',
+    '**/test-results/**',
+    '**/coverage/**',
+    '**/node_modules/**',
+    'apps/api/**',
   ]),
 
   {

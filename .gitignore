@@ -15,6 +15,7 @@ dist-ssr/
 out/
 build/
 *.local
+*.tsbuildinfo
 
 # Python
 __pycache__/

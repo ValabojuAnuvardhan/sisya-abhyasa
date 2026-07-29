@@ -121,7 +121,7 @@ chmod +x scripts/setup.sh
 
 ## 🧪 Testing & Quality Assurance
 
-Run the automated test runner:
+Run the automated test runner scripts:
 
 **Linux / macOS**:
 ```bash
@@ -133,10 +133,40 @@ Run the automated test runner:
 .\scripts\test.ps1
 ```
 
-Or execute individual test suites:
-- **API Unit & Integration Tests**: `pytest apps/api/tests`
-- **Playwright E2E Tests**: `npx playwright test`
-- **Linting & Code Quality**: `npm run lint`
+### Running CI & QA Commands Locally
+
+You can replicate the exact GitHub Actions workflow checks locally using the following commands:
+
+- **1. ESLint Code Quality**:
+  ```bash
+  npm run lint
+  ```
+
+- **2. TypeScript Type Check**:
+  ```bash
+  npm run typecheck
+  ```
+
+- **3. API Unit & Integration Tests (FastAPI / pytest)**:
+  ```bash
+  cd apps/api
+  python -m pytest tests/
+  ```
+
+- **4. Playwright End-to-End Tests**:
+  ```bash
+  # First time setup (installs required browser binaries)
+  npx playwright install --with-deps chromium
+
+  # Run Playwright test suite
+  npx playwright test
+  ```
+
+- **5. Production Web Build Check**:
+  ```bash
+  cd apps/web
+  npm run build
+  ```
 
 ---
 
