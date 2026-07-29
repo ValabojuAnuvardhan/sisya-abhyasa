@@ -1,49 +1,43 @@
-# Śiṣya Abhyāsa — Official Documentation Portal (v1.0.0)
+# Śiṣya Abhyāsa Master Documentation Hub
 
-Welcome to the central documentation index for **Śiṣya Abhyāsa v1.0.0**. This portal contains production-grade reference guides for developers, administrators, mentors, students, QA engineers, DevOps leads, and support teams.
-
----
-
-## Documentation Navigation Portal
-
-```
-docs/
-├── README.md                                # Central Index Portal (This File)
-├── user-guide/
-│   ├── student_guide.md                     # Student Onboarding & Proof-of-Work Guide
-│   └── mentor_guide.md                      # Mentor Project Guidance & Review Guide
-├── admin/
-│   └── admin_guide.md                       # System Admin, Backups & Maintenance Guide
-├── developer/
-│   ├── developer_guide.md                   # Repository Architecture & Setup Guide
-│   └── api_reference.md                     # Complete REST API Reference
-├── operations/
-│   ├── deployment_runbook.md                # Production Deployment & Rollback Runbook
-│   ├── operations_runbook.md                # Daily/Weekly Operational Runbook
-│   ├── incident_response.md                 # P1-P3 Incident Response Plan
-│   └── disaster_recovery.md                 # RTO/RPO Disaster Recovery Plan
-├── integrations/
-│   ├── github.md                            # GitHub OAuth, App & Webhook Guide
-│   └── ai_provider.md                       # Google Gemini API & Prompt Guide
-├── support/
-│   ├── troubleshooting.md                   # Production Support & Diagnostic Guide
-│   └── faq.md                               # Frequently Asked Questions (FAQ)
-└── release/
-    ├── release_readiness_audit_v1.0.0.md    # Formal CTO Release Readiness Audit (RRA)
-    ├── security_compliance_certification.md # Formal CISO Security & Compliance Cert (SCC)
-    ├── release_notes_v1.0.0.md              # v1.0.0 Release Notes & Highlights
-    └── versioning_strategy.md               # SemVer 2.0 & Branching Strategy
-```
+Welcome to the **Śiṣya Abhyāsa** documentation hub. This central portal provides navigation, architectural references, operational runbooks, and developer guides for the platform.
 
 ---
 
-## Quick Navigation Links
+## 📑 Documentation Index
 
-- 🎓 [Student Guide](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/user-guide/student_guide.md)
-- 👩‍🏫 [Mentor Guide](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/user-guide/mentor_guide.md)
-- ⚙️ [Admin Guide](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/admin/admin_guide.md)
-- 💻 [Developer Guide](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/developer/developer_guide.md)
-- 🔌 [REST API Reference](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/developer/api_reference.md)
-- 🚀 [Deployment Runbook](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/operations/deployment_runbook.md)
-- 📋 [Release Readiness Audit](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/release/v1.0.0/release_readiness_audit_v1.0.0.md)
-- 🛡️ [Security & Compliance Certification](file:///d:/Product%20ideas/sisya%20abhyasa%20core/sisya-abhyasa-v1.1-sprint9-community-discovery/sisya-abhyasa-v1.1-sprint8b-team-space/docs/release/v1.0.0/security_compliance_certification.md)
+### 1. Developer Guides & API References (`docs/developer/`)
+- **[Developer Guide](developer/developer_guide.md)**: Environment setup, repository layout, conventions, and coding patterns.
+- **[API Reference](developer/api_reference.md)**: OpenAPI endpoints, request schemas, authentication tokens, and response models.
+
+### 2. Admin & User Documentation (`docs/admin/`, `docs/user-guide/`)
+- **[Admin Guide](admin/admin_guide.md)**: Platform configuration, database maintenance, and administrative operations.
+- **[Student Guide](user-guide/student_guide.md)**: Walkthrough for students creating projects, discovering teams, and publishing evidence portfolios.
+- **[Mentor Guide](user-guide/mentor_guide.md)**: Guide for mentors reviewing pull requests, evaluating evidence claims, and offering feedback.
+
+### 3. Operations & Release Runbooks (`docs/operations/`, `docs/release/`)
+- **[Operations Runbook](operations/operations_runbook.md)**: Monitoring, logging, service recovery, and operational procedures.
+- **[Deployment Runbook](operations/deployment_runbook.md)**: Step-by-step production deployment instructions.
+- **[Disaster Recovery](operations/disaster_recovery.md)**: Backup procedures, database restore procedures, and failover strategy.
+- **[Incident Response](operations/incident_response.md)**: Incident classification, triage, and mitigation protocols.
+- **[Release Notes v1.0.0](release/release_notes_v1.0.0.md)**: Release features, breaking changes, and migration details.
+- **[Versioning Strategy](release/versioning_strategy.md)**: Semantic versioning policy and deprecation cycles.
+
+### 4. Integrations (`docs/integrations/`)
+- **[GitHub Integration](integrations/github.md)**: GitHub Webhooks, OAuth, App permissions, and telemetry tracking (`sensor.py`).
+- **[AI Provider Integration](integrations/ai_provider.md)**: LLM orchestration service architecture and context management.
+
+### 5. Sprint Development History (`docs/history/sprints/`)
+- **[Sprint History Index](history/sprints/SPRINT_9_STATUS.md)**: Complete chronological archive of development status from Sprint 0 through Sprint 9.
+
+---
+
+## 🔍 Module Matrix
+
+| Module | Location | Primary Language | Description |
+| ------ | -------- | ---------------- | ----------- |
+| **Backend API** | `apps/api/` | Python (FastAPI) | Core API routes, DB session management, JWT auth, Alembic migrations. |
+| **Frontend Web** | `apps/web/` | TypeScript (Next.js) | Production web application dashboard, team spaces, and proof cards. |
+| **Telemetry Sensor** | `sensor.py` | Python | Local development tracker & commit evidence collector. |
+| **E2E Suite** | `tests/` | JavaScript (Playwright) | Automated end-to-end user flow integration tests. |
+| **DevOps & Scripts** | `scripts/` & `.github/` | Bash / PowerShell / YAML | Multi-platform bootstrap scripts, CI workflows, and release tools. |

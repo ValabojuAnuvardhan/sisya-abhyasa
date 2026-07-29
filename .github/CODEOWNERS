@@ -1,0 +1,16 @@
+# Repository Code Owners
+
+# Default global owners
+* @ValabojuAnuvardhan
+
+# API & Backend
+/apps/api/ @ValabojuAnuvardhan
+
+# Web & Frontend
+/apps/web/ @ValabojuAnuvardhan
+
+# CI/CD Workflows
+/.github/workflows/ @ValabojuAnuvardhan
+
+# Security & Policies
+/SECURITY.md @ValabojuAnuvardhan
