@@ -1,0 +1,71 @@
+# ==========================================
+# Śiṣya Abhyāsa Enterprise Git Ignore Rules
+# ==========================================
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Dependency directories
+node_modules/
+dist/
+dist-ssr/
+.next/
+out/
+build/
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Archives & Compression
+*.zip
+*.tar.gz
+*.tgz
+*.7z
+
+# Testing & Automation
+playwright-report/
+test-results/
+coverage/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & System Files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Platform Deployments
+.vercel/

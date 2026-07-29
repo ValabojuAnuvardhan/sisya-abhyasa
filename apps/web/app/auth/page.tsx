@@ -1,0 +1,74 @@
+'use client';
+import {FormEvent,useState} from 'react'; 
+import {api} from '../../lib/api';
+import PageBack from '../../components/PageBack';
+
+export default function AuthPage(){
+  const [mode,setMode]=useState<'login'|'signup'>('login');
+  const [message,setMessage]=useState('');
+  const [devToken,setDevToken]=useState('');
+
+  async function submit(e:FormEvent<HTMLFormElement>){
+    e.preventDefault();
+    setMessage(''); 
+    const f=new FormData(e.currentTarget);
+    try{
+      if(mode==='signup'){
+        const r=await api('/auth/signup',{
+          method:'POST',
+          body:JSON.stringify({email:f.get('email'),password:f.get('password'),full_name:f.get('full_name')})
+        });
+        setMessage(r.message);
+        if(r.development_verification_token) setDevToken(r.development_verification_token);
+      } else {
+        await api('/auth/login',{
+          method:'POST',
+          body:JSON.stringify({email:f.get('email'),password:f.get('password')})
+        });
+        location.href='/dashboard';
+      }
+    }catch(err){
+      setMessage(err instanceof Error?err.message:'Authentication failed');
+    }
+  }
+
+  async function verify(){
+    try{
+      await api('/auth/verify-email',{
+        method:'POST',
+        body:JSON.stringify({token:devToken})
+      });
+      setMessage('Email verified. You can sign in now.');
+      setMode('login');
+      setDevToken('');
+    }catch(err){
+      setMessage(err instanceof Error?err.message:'Verification failed');
+    }
+  }
+
+  return (
+    <main className="shell formPage" style={{maxWidth:560}}>
+      <PageBack href="/" label="Back to Home" />
+      <section className="card">
+        <span className="tag">Student account</span>
+        <h1>{mode==='login'?'Sign in':'Create your account'}</h1>
+        <p>{mode==='login'?'Continue your projects and evidence.':'Create a private student account. Your Proof-of-Work stays private until you publish it.'}</p>
+        <form onSubmit={submit} style={{display:'grid',gap:14}}>
+          {mode==='signup'&&(
+            <label>Full name<input name="full_name" required /></label>
+          )}
+          <label>Email<input name="email" type="email" required /></label>
+          <label>Password<input name="password" type="password" minLength={10} required /></label>
+          <button className="btn primary" type="submit">{mode==='login'?'Sign in':'Create account'}</button>
+        </form>
+        {message&&<p className="note">{message}</p>}
+        {devToken&&<button className="btn secondary" onClick={verify}>Verify development email</button>}
+        <p>
+          <button className="btn secondary" onClick={()=>{setMode(mode==='login'?'signup':'login');setMessage('');setDevToken('')}}>
+            {mode==='login'?'Create an account':'Already have an account'}
+          </button>
+        </p>
+      </section>
+    </main>
+  );
+}
