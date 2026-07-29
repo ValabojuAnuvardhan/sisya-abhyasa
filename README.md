@@ -5,6 +5,8 @@
   # Śiṣya Abhyāsa (शिष्य अभ्यास)
   ### *AI-Powered Collaborative Engineering & Proof-of-Work Platform*
 
+  [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://sisya-abhyasa-v10.vercel.app)
+
   [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
   [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](.github/workflows/ci.yml)
   [![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](CHANGELOG.md)
@@ -14,12 +16,14 @@
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
   <p align="center">
+    <a href="https://sisya-abhyasa-v10.vercel.app"><b>🚀 Live Demo</b></a> •
     <a href="#-quick-start">Quick Start</a> •
     <a href="#-architecture">Architecture</a> •
     <a href="docs/README.md">Documentation</a> •
     <a href="#-repository-structure">Repository Structure</a> •
     <a href="CONTRIBUTING.md">Contributing</a>
   </p>
+
 
 </div>
 
