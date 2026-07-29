@@ -1,4 +1,5 @@
-export default function ProgressTab({ loggedIn, setLoginStep, studentStats, generatedRoadmaps, myProjects, collaboratorProjects }) {
+export default function ProgressTab({ loggedIn, setLoginStep, studentStats, _generatedRoadmaps, myProjects, collaboratorProjects }) {
+
   if (!loggedIn) {
     return (
       <div className="card" style={{ padding: 40, textAlign: "center" }}>

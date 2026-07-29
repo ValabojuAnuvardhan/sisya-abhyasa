@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { projects as initialMockProjects } from "../data/mockData";
+import { projects as _initialMockProjects } from "../data/mockData";
 
 export default function ProjectsTab({
-  loggedIn,
-  setLoginStep,
-  studentStats,
-  myProjects,
-  setMyProjects,
-  setCollaboratorProjects,
+  _loggedIn,
+  _setLoginStep,
+  _studentStats,
+  _myProjects,
+  _setMyProjects,
+  _setCollaboratorProjects,
 }) {
+
   // Current active role simulator: 'studentA' (Anuvardhan - Owner) or 'studentB' (Priya - Candidate/Collaborator)
   const [activeRole, setActiveRole] = useState("studentA");
 
