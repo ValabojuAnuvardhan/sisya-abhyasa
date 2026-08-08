@@ -77,7 +77,7 @@ export default function ProgressTab({ loggedIn, setLoginStep, studentStats, _gen
           <div className="proxima" style={{ fontSize: 12, color: "#9a8f87" }}>Active collaborative projects</div>
         </div>
         <div className="stat-box">
-          <div className="recoleta" style={{ fontSize: 30, color: "#00A19B" }}>{collaboratorProjects.length + 1}</div>
+          <div className="recoleta" style={{ fontSize: 30, color: "#00A19B" }}>{(collaboratorProjects?.length || 0) + 1}</div>
           <div className="proxima" style={{ fontSize: 12, color: "#9a8f87" }}>Joined team workspaces</div>
         </div>
         <div className="stat-box">

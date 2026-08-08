@@ -1,16 +1,19 @@
-# Repository Code Owners
+# Śiṣya Abhyāsa GitHub Codeowners
+# https://help.github.com/articles/about-code-owners/
 
-# Default global owners
+# Global repository owners
 * @ValabojuAnuvardhan
 
-# API & Backend
+# Backend FastAPI Service
 /apps/api/ @ValabojuAnuvardhan
 
-# Web & Frontend
+# Frontend Next.js Web App
 /apps/web/ @ValabojuAnuvardhan
 
-# CI/CD Workflows
-/.github/workflows/ @ValabojuAnuvardhan
+# Database & Migrations
+/apps/api/alembic/ @ValabojuAnuvardhan
+/apps/api/app/models/ @ValabojuAnuvardhan
 
-# Security & Policies
+# CI/CD Workflows & Security Policies
+/.github/ @ValabojuAnuvardhan
 /SECURITY.md @ValabojuAnuvardhan

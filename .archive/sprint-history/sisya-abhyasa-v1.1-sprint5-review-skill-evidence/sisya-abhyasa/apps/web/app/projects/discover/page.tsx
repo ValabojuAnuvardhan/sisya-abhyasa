@@ -1,0 +1,1 @@
+export default function ProjectDiscover(){return <main className="shell hero"><span className="tag">Community Projects</span><h1>Explore projects to join.</h1><p>This remains a V1 collaboration extension. Only explicitly discoverable community projects will appear here.</p><a className="btn secondary" href="/">← Back</a></main>}

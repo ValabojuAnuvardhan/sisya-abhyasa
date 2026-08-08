@@ -53,21 +53,6 @@ const benefits = [
 export default function Home() {
   return (
     <>
-      <header className="shell nav" role="banner">
-        <Link className="brand" href="/" aria-label="Śiṣya Abhyāsa Home">
-          Śiṣya Abhyāsa
-        </Link>
-        <nav className="navlinks" aria-label="Main Navigation">
-          <Link href="/discover">Discover</Link>
-          <Link href="/projects/discover">Community</Link>
-          <a href="#sample-proof">Sample Proof</a>
-          <Link href="/auth">Sign In</Link>
-        </nav>
-        <Link className="btn primary" href="/auth">
-          Get Started
-        </Link>
-      </header>
-
       <main className="shell" id="main-content">
         {/* SECTION 1: HERO SECTION */}
         <section className="hero" aria-labelledby="hero-title">

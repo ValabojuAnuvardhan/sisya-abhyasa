@@ -1,0 +1,1 @@
+export default function NewProject(){return <main className="shell hero"><span className="tag">Bring Your Own Idea</span><h1>Turn your idea into a project.</h1><p>The next implementation stage connects this route to authenticated project creation and the AI Project Architect.</p><a className="btn secondary" href="/">← Back</a></main>}

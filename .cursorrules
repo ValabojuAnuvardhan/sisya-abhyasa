@@ -1,0 +1,15 @@
+# ANTIGRAVITY AGENT AUTONOMOUS OPERATING CORE
+# Single Source of Truth: PROJECT_RULES.md
+
+See PROJECT_RULES.md and .agents/AGENTS.md for full details.
+
+1. GSD (Get Shit Done) Protocol:
+   - Perform dependency check and document micro-atomic plan in PLAN.md / implementation_plan.md.
+   - Require explicit user approval before writing code.
+
+2. Ralph Loop Execution:
+   - Single task focus.
+   - Execute unit tests (pytest), linters (npm run lint), and builds (next build) after every change.
+
+3. CodeRabbit Compliance Guard:
+   - Audit diffs for edge cases, algorithmic complexity, zero hardcoded secrets, and strict data type safety.

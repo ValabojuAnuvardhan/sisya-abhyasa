@@ -23,6 +23,7 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
     profile: Mapped["StudentProfile | None"] = relationship(back_populates="user", cascade="all, delete-orphan", uselist=False)
+    github_connection: Mapped["GithubConnection | None"] = relationship("GithubConnection", back_populates="user", cascade="all, delete-orphan", uselist=False)
     skills: Mapped[list["Skill"]] = relationship(secondary=user_skills, back_populates="users")
 
 class StudentProfile(Base):

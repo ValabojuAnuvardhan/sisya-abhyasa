@@ -23,17 +23,23 @@ async def require_principal(
     sisya_session: str | None = Cookie(default=None, alias=settings.session_cookie_name),
     db: Session = Depends(get_db),
 ) -> AuthPrincipal:
-    # Real session auth takes precedence in every environment.
-    if sisya_session:
-        session=db.scalar(select(AuthSession).where(AuthSession.token_hash==_hash_token(sisya_session)))
-        now=datetime.now(timezone.utc)
+    token = sisya_session
+    if not token and authorization and authorization.lower().startswith("bearer "):
+        token = authorization[7:].strip()
+
+    if token:
+        session = db.scalar(select(AuthSession).where(AuthSession.token_hash == _hash_token(token)))
+        now = datetime.now(timezone.utc)
         exp = session.expires_at.replace(tzinfo=timezone.utc) if session and session.expires_at and session.expires_at.tzinfo is None else (session.expires_at if session else None)
         if session and exp and exp > now:
-            user=db.get(User,session.user_id)
+            user = db.get(User, session.user_id)
             if user and user.is_active:
-                session.last_seen_at=now; db.commit()
-                return AuthPrincipal(subject=user.auth_subject,email=user.email,user_id=user.id)
-    # Explicit dev adapter is available only when BOTH flags allow it.
-    if settings.environment == "development" and settings.allow_dev_auth and x_dev_auth_subject:
-        return AuthPrincipal(subject=x_dev_auth_subject,email=x_dev_auth_email)
+                session.last_seen_at = now
+                db.commit()
+                return AuthPrincipal(subject=user.auth_subject, email=user.email, user_id=user.id)
+
+    if settings.environment == "development" and settings.allow_dev_auth:
+        if x_dev_auth_subject:
+            return AuthPrincipal(subject=x_dev_auth_subject, email=x_dev_auth_email)
+
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")

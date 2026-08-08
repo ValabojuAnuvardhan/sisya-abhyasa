@@ -70,3 +70,7 @@ Thumbs.db
 
 # Platform Deployments
 .vercel/
+
+# IDE Internal
+.gemini/
+

@@ -88,3 +88,28 @@
   .ctaCard{padding:32px 18px}
   .ctaCard h2{font-size:28px}
 }
+
+/* SVG and Image Safety & Dimension Constraints */
+img, svg {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.github-icon-svg {
+  width: 48px !important;
+  height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+}
+
+.github-avatar-img {
+  width: 56px !important;
+  height: 56px !important;
+  max-width: 56px !important;
+  max-height: 56px !important;
+  object-fit: contain !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}

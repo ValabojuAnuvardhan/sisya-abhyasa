@@ -1,0 +1,1 @@
+export default function Discover(){return <main className="shell hero"><span className="tag">A0 · Project Discovery</span><h1>Find something worth building.</h1><p>This production route is ready for the server-side Project Discovery Agent. No browser-side AI calls are permitted.</p><a className="btn secondary" href="/">← Back</a></main>}

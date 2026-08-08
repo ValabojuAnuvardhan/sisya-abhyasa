@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: sisya
+      POSTGRES_PASSWORD: sisya
+      POSTGRES_DB: sisya
+    ports:
+      - "5432:5432"
+    volumes:
+      - sisya_postgres:/var/lib/postgresql/data
+volumes:
+  sisya_postgres:

@@ -7,6 +7,9 @@ import HomeTab from "./pages/HomeTab";
 import SolutionsTab from "./pages/SolutionsTab";
 import ProjectsTab from "./pages/ProjectsTab";
 import ProgressTab from "./pages/ProgressTab";
+import SkillGraphTab from "./pages/SkillGraphTab";
+import RecruiterViewTab from "./pages/RecruiterViewTab";
+import TeamAnalyticsTab from "./pages/TeamAnalyticsTab";
 
 const DEFAULT_STATS = {
   name: "",
@@ -96,8 +99,6 @@ function App() {
       outcome: `A fully functioning MVP solving ${problem.title} ready for real-world deployment.`
     };
 
-    // Sprint 0 safety: no AI provider is called from the browser.
-    // This local prototype data will be replaced by the FastAPI A0/A1 endpoints.
     const prototypeRoadmap = fallbackRoadmaps[problem.domain] || defaultFallback;
     setRoadmap(prototypeRoadmap);
     saveRoadmapProgress(problem, prototypeRoadmap);
@@ -125,6 +126,9 @@ function App() {
     { id: "solutions", label: "Discover" },
     { id: "projects", label: "Projects" },
     { id: "progress", label: "Proof of Work" },
+    { id: "skill_graph", label: "Skill Graph" },
+    { id: "recruiter", label: "Recruiter View" },
+    { id: "analytics", label: "Team Analytics" },
   ];
 
   return (
@@ -148,7 +152,6 @@ function App() {
         />
       )}
 
-      {/* RoadmapModal — used from Solutions tab or from Progress "View" button */}
       {(selectedProblem || viewingRoadmap) && (
         <RoadmapModal
           selectedProblem={viewingRoadmap ? viewingRoadmap.problem : selectedProblem}
@@ -188,6 +191,9 @@ function App() {
             setActiveTab={setActiveTab}
           />
         )}
+        {activeTab === "skill_graph" && <SkillGraphTab />}
+        {activeTab === "recruiter" && <RecruiterViewTab />}
+        {activeTab === "analytics" && <TeamAnalyticsTab />}
       </main>
 
       <Footer />
@@ -196,3 +202,4 @@ function App() {
 }
 
 export default App;
+

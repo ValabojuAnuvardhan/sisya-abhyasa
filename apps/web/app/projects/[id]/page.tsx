@@ -3,6 +3,7 @@ import {useEffect,useMemo,useState} from 'react';
 import {useParams} from 'next/navigation'; 
 import {api} from '../../../lib/api';
 import PageBack from '../../../components/PageBack';
+import Breadcrumbs from '../../../components/Breadcrumbs';
 
 type Task={id:string;title:string;description:string;completion_criteria:string;required_skills:string[];resources:string[];status:'todo'|'in_progress'|'in_review'|'done';assigned_user_id:string|null};
 type Member={user_id:string;full_name:string;email:string|null;role:string;status:string};
@@ -135,19 +136,20 @@ export default function ProjectPage(){
 
   return (
     <main className="shell formPage">
-      <PageBack href="/projects" label="Back to Projects" />
-      <span className="tag">Project workspace · {p.difficulty}</span>
-      <h1>{p.title}</h1>
+      <Breadcrumbs items={[{ label: 'Home', href: '/' }, { label: 'Projects', href: '/projects' }]} current={p.title} />
+      <span className="tag">Project Workspace · {p.difficulty} · {p.my_role}</span>
+      <h1 style={{ fontSize: 36, margin: '12px 0 8px', fontFamily: 'Georgia, serif' }}>{p.title}</h1>
       <p className="lead">{p.description}</p>
       
-      <div className="workspaceNav">
-        <a href="#team">Team</a>
-        {p.my_role==='owner'&&<a href={`/projects/${id}/collaboration`}>Find collaborators</a>}
-        <a href="#team-space">Team Space</a>
-        <a href="#kanban">Kanban</a>
-        <a href="#github">GitHub Evidence</a>
-        <a href="#milestones">Milestones</a>
-        <a href="/projects">My Projects</a>
+      <div className="workspaceNav" style={{ background: 'rgba(0,0,0,0.03)', padding: 12, borderRadius: 12, border: '1px solid var(--border-subtle)' }}>
+        <a href="#kanban" className="btn secondary" style={{ padding: '6px 14px', fontSize: 13 }}>📋 Kanban Tasks</a>
+        <a href="#team-space" className="btn secondary" style={{ padding: '6px 14px', fontSize: 13 }}>💬 Team Space & Chat</a>
+        <a href="#github" className="btn secondary" style={{ padding: '6px 14px', fontSize: 13 }}>🛡️ GitHub Evidence</a>
+        <a href="#team" className="btn secondary" style={{ padding: '6px 14px', fontSize: 13 }}>👥 Team Members</a>
+        <a href="#milestones" className="btn secondary" style={{ padding: '6px 14px', fontSize: 13 }}>🎯 Milestones</a>
+        {p.my_role==='owner'&&(
+          <a href={`/projects/${id}/collaboration`} className="btn primary" style={{ padding: '6px 14px', fontSize: 13 }}>🤝 Open Collaboration</a>
+        )}
       </div>
 
       <section id="team" className="planReview">

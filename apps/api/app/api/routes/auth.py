@@ -22,10 +22,11 @@ def _verify(password:str, encoded:str)->bool:
         actual=hashlib.scrypt(password.encode(),salt=salt,n=int(ns),r=int(rs),p=int(ps),dklen=len(expected)); return hmac.compare_digest(actual,expected)
     except Exception: return False
 
-def _set_session(response:Response,db:Session,user:User):
+def _set_session(response:Response,db:Session,user:User)->str:
     raw=secrets.token_urlsafe(48); expires=_now()+timedelta(days=settings.session_days)
     db.add(AuthSession(user_id=user.id,token_hash=_token_hash(raw),expires_at=expires)); db.commit()
     response.set_cookie(settings.session_cookie_name,raw,httponly=True,secure=settings.environment=='production',samesite='lax',max_age=settings.session_days*86400,path='/')
+    return raw
 
 class Signup(BaseModel):
     email: EmailStr
@@ -73,8 +74,8 @@ def login(payload:Login,response:Response,db:Session=Depends(get_db)):
             db.commit()
         raise HTTPException(status.HTTP_401_UNAUTHORIZED,'Invalid email or password')
     if not cred.email_verified_at: raise HTTPException(403,'Email verification required')
-    cred.failed_login_count=0; cred.locked_until=None; db.commit(); _set_session(response,db,user)
-    return {'authenticated':True,'user_id':str(user.id)}
+    cred.failed_login_count=0; cred.locked_until=None; db.commit(); token=_set_session(response,db,user)
+    return {'authenticated':True,'access_token':token,'token_type':'bearer','user_id':str(user.id)}
 
 @router.post('/logout')
 def logout(response:Response,db:Session=Depends(get_db),sisya_session:str|None=Cookie(default=None,alias=settings.session_cookie_name)):
