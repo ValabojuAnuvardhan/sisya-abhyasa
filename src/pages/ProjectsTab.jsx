@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { projects as _initialMockProjects } from "../data/mockData";
 
+function cleanStudentName(nameStr) {
+  if (!nameStr) return "Project Lead";
+  let cleaned = nameStr.trim();
+  cleaned = cleaned.replace(/^([a-z0-9_-]+)([A-Z][a-z]+.*)$/, "$2");
+  return cleaned.trim() || "Project Lead";
+}
+
 export default function ProjectsTab({
   loggedIn,
   setLoginStep,
@@ -9,7 +16,8 @@ export default function ProjectsTab({
   setMyProjects,
   setCollaboratorProjects,
 }) {
-  const leadName = studentStats?.name || "Project Lead";
+  const rawLeadName = studentStats?.name || "Project Lead";
+  const leadName = cleanStudentName(rawLeadName);
   const leadGithub = studentStats?.githubUsername ? `@${studentStats.githubUsername}` : "@project-lead";
 
   // Current active role simulator: 'studentA' (Owner) or 'studentB' (Collaborator)
