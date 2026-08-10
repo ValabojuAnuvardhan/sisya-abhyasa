@@ -57,9 +57,35 @@ function App() {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [roadmap, setRoadmap] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  
+  const [loggedIn, setLoggedIn] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sisya_user_session");
+      return !!saved;
+    } catch {
+      return false;
+    }
+  });
   const [loginStep, setLoginStep] = useState(false);
-  const [studentStats, setStudentStats] = useState(null);
+  const [studentStats, setStudentStats] = useState(() => {
+    try {
+      const saved = localStorage.getItem("sisya_user_session");
+      return saved ? JSON.parse(saved) : DEFAULT_STATS;
+    } catch {
+      return DEFAULT_STATS;
+    }
+  });
+
+  const handleSignOut = () => {
+    try {
+      localStorage.removeItem("sisya_user_session");
+    } catch (err) {
+      console.warn("Could not clear localStorage session:", err);
+    }
+    setLoggedIn(false);
+    setStudentStats(DEFAULT_STATS);
+    setActiveTabState("home");
+  };
 
   const [generatedRoadmaps, setGeneratedRoadmaps] = useState([]);
   const [myProjects, setMyProjects] = useState([]);
@@ -100,7 +126,7 @@ function App() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f8fafc" }}>
-      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} loggedIn={loggedIn} onNewItemCreated={handleNewItemCreated} />
+      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} loggedIn={loggedIn} onNewItemCreated={handleNewItemCreated} handleSignOut={handleSignOut} />
 
       {loginStep && (
         <LoginModal

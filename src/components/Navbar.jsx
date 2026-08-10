@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NewActionModal, NotificationsDrawer, RewardsModal } from "./ActionModals";
 
-export default function Navbar({ setLoginStep, studentStats, loggedIn, onNewItemCreated }) {
+export default function Navbar({ setLoginStep, studentStats, loggedIn, onNewItemCreated, handleSignOut }) {
   const [showNewModal, setShowNewModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
@@ -153,22 +153,39 @@ export default function Navbar({ setLoginStep, studentStats, loggedIn, onNewItem
                 </span>
               </div>
 
-              {/* User Profile */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => setLoginStep(true)}>
-                <div style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  background: "linear-gradient(135deg, #00A19B 0%, #0f172a 100%)",
-                  color: "#ffffff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 12,
-                  fontWeight: 700,
-                }}>
+              {/* User Profile + Sign Out */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div
+                  style={{
+                    width: 34,
+                    height: 34,
+                    borderRadius: "50%",
+                    background: "linear-gradient(135deg, #00A19B 0%, #0f172a 100%)",
+                    color: "#ffffff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                  title={studentStats?.name || "Student Profile"}
+                >
                   {studentStats ? studentStats.avatar || "SB" : "SB"}
                 </div>
+                <button
+                  onClick={handleSignOut}
+                  className="ghost-btn"
+                  style={{
+                    padding: "6px 12px",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    borderColor: "#cbd5e1",
+                    color: "#64748b",
+                    borderRadius: 8,
+                  }}
+                >
+                  Sign Out
+                </button>
               </div>
             </>
           ) : (
