@@ -71,7 +71,7 @@ export default function ProjectsTab({
       },
     ],
     teamSpace: {
-      meetingUrl: "https://meet.google.com/sisya-ecosmart-team",
+      meetingUrl: "https://meet.google.com/new",
       messages: [
         {
           id: "msg-1",

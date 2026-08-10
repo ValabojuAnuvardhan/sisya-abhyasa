@@ -8,46 +8,46 @@ export default function GitHubEvidenceTab() {
   const pullRequests = [
     {
       id: "PR #12",
-      title: "Authentication",
-      author: "student-dev",
+      title: "Authentication & OAuth Setup",
+      author: username,
       time: "3 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+142 lines, -18 lines",
-      prUrl: "https://github.com/sisya-abhyasa",
+      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
       hmac: "sha256-a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0"
     },
     {
       id: "PR #18",
-      title: "Dashboard",
-      author: "student-dev",
+      title: "Dashboard Telemetry Integration",
+      author: username,
       time: "5 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+320 lines, -45 lines",
-      prUrl: "https://github.com/sisya-abhyasa",
+      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
       hmac: "sha256-9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba"
     },
     {
       id: "PR #21",
-      title: "Kanban",
-      author: "student-dev",
+      title: "Kanban Task Pipeline",
+      author: username,
       time: "1 day ago",
       status: "Pending Review",
       isMerged: false,
       diff: "+95 lines, -2 lines",
-      prUrl: "https://github.com/sisya-abhyasa",
+      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
       hmac: "sha256-11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff"
     },
     {
       id: "PR #26",
       title: "Task AI Mentor Integration",
-      author: "student-dev",
+      author: username,
       time: "6 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+410 lines, -60 lines",
-      prUrl: "https://github.com/sisya-abhyasa",
+      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
       hmac: "sha256-ffeeddccbbaa00998877665544332211ffeeddccbbaa00998877665544332211"
     }
   ];
