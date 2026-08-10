@@ -1,9 +1,12 @@
 import { useState } from "react";
 
-export default function GitHubEvidenceTab() {
+export default function GitHubEvidenceTab({ studentStats }) {
   const [activeTab, setActiveTab] = useState("timeline");
   const [synced, setSynced] = useState(false);
   const [selectedPR, setSelectedPR] = useState(null);
+
+  const username = studentStats?.githubUsername || "student-dev";
+  const studentName = studentStats?.name || "Student Builder";
 
   const pullRequests = [
     {
