@@ -12,6 +12,8 @@ import SkillGraphTab from "./pages/SkillGraphTab";
 import RecruiterViewTab from "./pages/RecruiterViewTab";
 import TeamAnalyticsTab from "./pages/TeamAnalyticsTab";
 import GitHubEvidenceTab from "./pages/GitHubEvidenceTab";
+import KanbanTab from "./pages/KanbanTab";
+import SettingsTab from "./pages/SettingsTab";
 
 const DEFAULT_STATS = {
   name: "Anu Vardhan",
@@ -27,7 +29,7 @@ function App() {
   const [activeTab, setActiveTabState] = useState(() => {
     if (typeof window !== "undefined" && window.location.hash) {
       const hash = window.location.hash.replace("#", "");
-      if (["github", "home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics"].includes(hash)) {
+      if (["github", "home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics", "kanban", "settings", "overview", "milestones"].includes(hash)) {
         return hash;
       }
     }
@@ -44,7 +46,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "");
-      if (["github", "home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics"].includes(hash)) {
+      if (["github", "home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics", "kanban", "settings", "overview", "milestones"].includes(hash)) {
         setActiveTabState(hash);
       }
     };
@@ -71,9 +73,34 @@ function App() {
     setRoadmapLoading(false);
   };
 
+  const handleNewItemCreated = (item) => {
+    if (item.category === "project") {
+      setMyProjects((prev) => [
+        {
+          id: `proj-${Date.now()}`,
+          name: item.title,
+          description: item.description,
+          collaborationPitch: "Open to student collaborators!",
+          skillsNeeded: ["React", "FastAPI"],
+          teamCapacity: 4,
+          discoverable: true,
+          progress: 10,
+          members: [{ id: "user-a", name: "Anu Vardhan", role: "Owner" }],
+          tasks: [],
+        },
+        ...prev,
+      ]);
+      setActiveTab("projects");
+    } else if (item.category === "task") {
+      setActiveTab("kanban");
+    } else {
+      setActiveTab("github");
+    }
+  };
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f8fafc" }}>
-      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} />
+      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} onNewItemCreated={handleNewItemCreated} />
 
       {loginStep && (
         <LoginModal
@@ -102,7 +129,7 @@ function App() {
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <main style={{ flex: 1, padding: "24px 32px", overflowX: "hidden" }}>
-          {activeTab === "github" && <GitHubEvidenceTab />}
+          {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab />}
           {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
           {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
           {activeTab === "projects" && (
@@ -130,6 +157,9 @@ function App() {
           {activeTab === "skill_graph" && <SkillGraphTab />}
           {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} />}
           {activeTab === "analytics" && <TeamAnalyticsTab />}
+          {activeTab === "kanban" && <KanbanTab />}
+          {activeTab === "settings" && <SettingsTab />}
+          {activeTab === "milestones" && <ProgressTab loggedIn={loggedIn} setLoginStep={setLoginStep} studentStats={studentStats} setStudentStats={setStudentStats} generatedRoadmaps={generatedRoadmaps} myProjects={myProjects} setViewingRoadmap={setViewingRoadmap} setActiveTab={setActiveTab} />}
         </main>
       </div>
 
