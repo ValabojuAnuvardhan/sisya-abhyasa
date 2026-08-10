@@ -75,7 +75,7 @@ export default function ProjectsTab({
       messages: [
         {
           id: "msg-1",
-          author: "Anuvardhan (Student A)",
+          author: `${leadName} (Project Lead)`,
           text: "Welcome team! Check out #task-1 for the sensor ingestion API.",
           time: "10:15 AM",
           references: ["#task-1"],
@@ -164,7 +164,7 @@ export default function ProjectsTab({
         r.userId === "user-b" ? { ...r, status: "pending" } : r
       ),
     }));
-    showToast("Join request submitted to Anuvardhan!");
+    showToast(`Join request submitted to ${leadName}!`);
   };
 
   const handleConnectGithub = () => {
@@ -180,7 +180,7 @@ export default function ProjectsTab({
     if (!chatInput.trim()) return;
     const text = chatInput.trim();
     const isStudentA = activeRole === "studentA";
-    const authorName = isStudentA ? "Anuvardhan (Student A)" : "Priya (Student B)";
+    const authorName = isStudentA ? `${leadName} (Project Lead)` : "Priya (Team Member)";
     const newMsg = {
       id: `msg-${Date.now()}`,
       author: authorName,
@@ -410,7 +410,7 @@ export default function ProjectsTab({
                   fontWeight: 600,
                 }}
               >
-                ⏳ Join Request Submitted & Pending Approval from Student A (Anuvardhan). Switch to Student A to Accept!
+                ⏳ Join Request Submitted & Pending Approval from {leadName} (Project Lead).
               </div>
             ) : (
               <button className="mint-btn" style={{ padding: "10px 24px", fontSize: 13 }} onClick={handleSendJoinRequest}>
