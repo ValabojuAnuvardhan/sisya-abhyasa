@@ -331,68 +331,7 @@ export default function ProjectsTab({
         </div>
       )}
 
-      {/* Interactive Role Switcher Banner */}
-      <div
-        style={{
-          background: "linear-gradient(135deg, #1b262c 0%, #0f172a 100%)",
-          borderRadius: 16,
-          padding: "20px 28px",
-          marginBottom: 32,
-          color: "#e2e8f0",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
-        }}
-      >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
-          <div>
-            <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, color: "#00A19B", marginBottom: 4 }}>
-              Interactive End-to-End Workflow Simulator
-            </div>
-            <div className="recoleta" style={{ fontSize: 22, color: "#ffffff" }}>
-              Active User Persona:{" "}
-              <span style={{ color: isStudentA ? "#38bdf8" : "#f472b6" }}>
-                {isStudentA ? "Project Lead (Owner)" : "Team Member (Collaborator)"}
-              </span>
-            </div>
-            <p className="proxima" style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, margin: 0 }}>
-              Switch perspectives to simulate project creation, community discovery, join request approval, task assignment, team chat & @mentor, and GitHub webhook proof-of-work generation.
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button
-              onClick={() => setActiveRole("studentA")}
-              style={{
-                background: isStudentA ? "#0284c7" : "rgba(255,255,255,0.08)",
-                color: "#ffffff",
-                border: "1px solid " + (isStudentA ? "#38bdf8" : "rgba(255,255,255,0.15)"),
-                padding: "8px 16px",
-                borderRadius: 30,
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-            >
-              👤 Switch to Project Lead (Owner)
-            </button>
-            <button
-              onClick={() => setActiveRole("studentB")}
-              style={{
-                background: !isStudentA ? "#db2777" : "rgba(255,255,255,0.08)",
-                color: "#ffffff",
-                border: "1px solid " + (!isStudentA ? "#f472b6" : "rgba(255,255,255,0.15)"),
-                padding: "8px 16px",
-                borderRadius: 30,
-                fontSize: 12,
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.2s ease",
-              }}
-            >
-              👩‍💻 Switch to Team Member (Collaborator)
-            </button>
-          </div>
-        </div>
-      </div>
+
 
       {/* Main Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 28 }}>
