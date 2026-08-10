@@ -1,75 +1,123 @@
-# GSD PLAN: Śiṣya Abhyāsa v1.1.0 — Non-Breaking Extension
+# Śiṣya Abhyāsa — Learning Operating System Architecture & Sprint 5 Plan
 
-> **Target Version**: v1.1.0 (Extension of v1.0.0 Production Base)
-> **Backward Compatibility Guarantee**: Zero changes to existing v1.0.0 database tables, routes, or UI components.
+Build the **Learning Activity & Evidence Foundation** for Śiṣya Abhyāsa as the foundational layer of the Learning Operating System.
 
----
-
-## Wave 1: Database Schema Foundations (Additive Only)
-
-- [ ] **Task 1.1: v1.1.0 Models** (`apps/api/app/models/evaluations.py`, `skills_v2.py`)
-  - Create `UserSkillProficiency` model (`user_id`, `skill_id`, `proficiency_score` 0-100%, `evidence_count`).
-  - Create `MentorObservation` model (`user_id`, `type`, `title`, `content`, `action_url`, `is_read`).
-  - Create `ProjectEvaluation` model (`project_id`, 10 dimension scores, strengths, weaknesses, `resume_bullets`, `linkedin_summary`, `interview_questions`, `badge_level`).
-  - Create `RecruiterProfile` model (`user_id`, `public_slug`, `featured_projects`, `bio`).
-
-- [ ] **Task 1.2: Alembic Migration** (`apps/api/alembic/versions/0003_v1_1_0_schema.py`)
-  - Additive migration creating new tables without modifying existing v1.0.0 columns or tables.
-
-- [ ] **Task 1.3: Pydantic Schemas** (`apps/api/app/schemas/mentor.py`, `evaluation.py`, `recruiter.py`, `skills_v2.py`)
-  - Request/response schemas for mentor recommendations, skill graph, recruiter profile, and evaluations.
+> [!IMPORTANT]
+> **Core Architectural Hierarchy**:
+> ```
+> Learning Activity ➔ Artifact ➔ Evidence ➔ Verification ➔ Capability ➔ Projection ➔ AI Intelligence
+> ```
+> 1. **Learning Activity**: What happened (Task completed, PR created, Code review given, Quiz passed, AI session completed).
+> 2. **Artifact**: Raw output (`CanonicalArtifact` via `GithubAdapter`, `TaskAdapter`, `MentorAdapter`).
+> 3. **Evidence**: Curated, deduplicated (`IdentityService`), and linked (`RelationshipBuilder`) proof.
+> 4. **Verification**: Workflow credibility engine (Sprint 6).
+> 5. **Capability**: Proven capabilities (`SkillEngine`, `TrustEngine`, Leadership, Architecture) (Sprint 7).
+> 6. **Projection**: Audience-specific read models (`StudentProjection`, `RecruiterProjection`) (Sprint 8).
+> 7. **AI Intelligence**: Reasoning layer (`AIMentor`, `LivingResume`, `AIRecruiterAssistant`) (Sprint 9).
 
 ---
 
-## Wave 2: AI Services & Inferencing Logic
+## The 5 Decoupled Platform Domains
 
-- [ ] **Task 2.1: Proactive AI Mentor Service** (`apps/api/app/services/ai_mentor_service.py`)
-  - Observes user commits/PRs and emits daily goals, architecture tips, and code review suggestions.
-
-- [ ] **Task 2.2: Dynamic Skill Inferencing Engine** (`apps/api/app/services/skill_engine.py`)
-  - Inferencing algorithm calculating proficiency percentages from commit volume, code reviews, PRs, and proof cards.
-
-- [ ] **Task 2.3: Project Graduation Evaluation Engine** (`apps/api/app/services/evaluation_engine.py`)
-  - Automated project evaluation scoring 10 dimensions upon project completion and generating employability assets.
-
----
-
-## Wave 3: Backend REST APIs (New Routers)
-
-- [ ] **Task 3.1: Mentor Routes** (`apps/api/app/api/routes/mentor.py`)
-  - `GET /api/v1/mentor/observations`
-  - `POST /api/v1/mentor/daily-goals`
-
-- [ ] **Task 3.2: Dynamic Skill Routes** (`apps/api/app/api/routes/skills.py`)
-  - `GET /api/v1/skills/graph`
-  - `POST /api/v1/skills/recalculate`
-
-- [ ] **Task 3.3: Recruiter Portfolio Routes** (`apps/api/app/api/routes/recruiter.py`)
-  - `GET /api/v1/recruiter/profile/{slug}`
-  - `GET /api/v1/recruiter/export/pdf/{slug}`
-
-- [ ] **Task 3.4: Team Analytics & Risk Routes** (`apps/api/app/api/routes/analytics.py`)
-  - `GET /api/v1/analytics/team/{team_id}`
-  - `GET /api/v1/analytics/risk-alerts`
-
-- [ ] **Task 3.5: AI Project Evaluation Routes** (`apps/api/app/api/routes/evaluation.py`)
-  - `POST /api/v1/evaluation/projects/{project_id}`
-  - `GET /api/v1/evaluation/projects/{project_id}`
+```
+1. LEARNING DOMAIN     ➔ Projects, Tasks, Milestones, Learning Activities, Teams
+2. EVIDENCE DOMAIN     ➔ Provider Registry, Artifact Store, Evidence Store, Pipeline, Event Bus
+3. CAPABILITY DOMAIN   ➔ Skill Engine, Experience Engine, Trust Engine, Capability Graph
+4. PROJECTION DOMAIN   ➔ Projection Worker, Student View, Recruiter Platform
+5. INTELLIGENCE DOMAIN ➔ AI Mentor, Living Resume ("Ask AI"), AI Recruiter Assistant
+```
 
 ---
 
-## Wave 4: Frontend UI Extensions
+## Sprint 5 Scope — Learning Activity & Evidence Foundation
 
-- [ ] **Task 4.1: Dynamic Skill Graph Component** (`SkillGraphTab.jsx` / `apps/web/components/SkillGraph.tsx`)
-- [ ] **Task 4.2: Recruiter Public Profile View** (`RecruiterViewTab.jsx` / `apps/web/app/recruiter/[slug]/page.tsx`)
-- [ ] **Task 4.3: Team Analytics & Risk Dashboard** (`TeamAnalyticsTab.jsx` / `apps/web/app/analytics/page.tsx`)
-- [ ] **Task 4.4: Proactive AI Mentor Panel** (`AIMentorPanel.jsx` / `apps/web/components/AIMentorPanel.tsx`)
-- [ ] **Task 4.5: Project Graduation Evaluation Modal** (`ProjectEvaluationModal.jsx`)
+```
+apps/api/app/github/evidence_graph/
+├── __init__.py
+├── registry.py        # ProviderRegistry (provider, version, capabilities, adapter)
+├── canonical.py       # CanonicalArtifact Data Standard
+├── adapter.py         # BaseSourceAdapter, GithubAdapter (v1), LearningActivityAdapter (v1)
+├── identity.py        # IdentityService & HashStrategy (Deduplication)
+├── context.py         # ProcessingContext (request_id, project_id, student_id, trace_id)
+├── pipeline.py        # Multi-Stage ProcessingPipeline (Normalize -> Validate -> Enrich -> Deduplicate -> Persist -> Relate -> Promote -> Emit)
+├── rules.py           # Priority-Based RelationshipRule plugins (GithubRule, TaskRule, MentorRule)
+├── builder.py         # RelationshipBuilder Engine
+├── events.py          # Domain Event Bus & Immutable Event Store
+├── projections.py     # CQRS ProjectionWorker, Read Repositories, Read Models
+├── commands.py        # Write Commands (CollectArtifactsCommand, CreateRelationshipCommand, etc.)
+├── queries.py         # Read Queries (GetTaskEvidenceQuery, GetProjectEvidenceQuery)
+├── service.py         # EvidencePlatformService Orchestrator
+├── validators.py      # Security & Isolation Validators
+├── models.py          # LearningActivityRecord, ArtifactRecord, EvidenceRecord, EvidenceLink, EvidenceEvent Database Tables
+├── schemas.py         # Infrastructure Pydantic DTOs
+└── routes.py          # Infrastructure REST API Endpoints
+```
 
 ---
 
-## Wave 5: Verification & Quality Assurance
+## Proposed Component Breakdown for Sprint 5
 
-- [ ] **Task 5.1: Backend Pytest Suite** (`apps/api/tests/test_v1_1_0_features.py`)
-- [ ] **Task 5.2: CodeRabbit Security Audit**
-- [ ] **Task 5.3: Playwright E2E Verification Script** (`tests/v1_1_0_e2e.spec.js`)
+### 1. Learning Activity Foundation (`models.py`, `adapter.py`)
+- `LearningActivityRecord`: Core activity entity (`id`, `project_id`, `student_id`, `activity_type`, `source_provider`, `activity_data_json`, `timestamp`).
+- `LearningActivityAdapter`: Converts internal Śiṣya actions (`task_created`, `task_completed`, `quiz_passed`, `mentor_review`) into `CanonicalArtifact` objects.
+
+### 2. Provider Registry & Canonical Standard (`registry.py`, `canonical.py`)
+- `ProviderCapabilities`: Capability contracts (`supports_webhooks`, `supports_reviews`, `supports_prs`, `supports_branches`, `supports_commits`, `supports_deployments`, `supports_ci`, `supports_files`).
+- `ProviderRegistry`: Registry mapping provider keys and version strings (e.g. `("github", "v1")`, `("sisya", "v1")`, `("gitlab", "v1")`) to capabilities and adapters.
+- `CanonicalArtifact`: Raw artifact schema (`schema_version`, `provider`, `version`, `artifact_type`, `provider_entity_id`, `actor`, `timestamp`, `payload`, `metadata`).
+
+### 3. Identity Service & Dual Storage (`identity.py`, `models.py`)
+- `HashStrategy`: Deterministic SHA-256 hash generator.
+- `ArtifactStore` (`artifact_records`): Raw artifact store for future AI reprocessing.
+- `EvidenceStore` (`evidence_records`): Promoted evidence store.
+
+### 4. Processing Pipeline (`pipeline.py`)
+- `ProcessingPipeline`: 8 isolated stages receiving `ProcessingContext`:
+  1. `NormalizeStage`
+  2. `ValidateStage`
+  3. `EnrichStage`
+  4. `DeduplicateStage`
+  5. `PersistArtifactStage`
+  6. `RelationshipStage`
+  7. `PromoteToEvidenceStage`
+  8. `EmitEventStage`
+
+### 5. Priority-Based Relationship Builder (`rules.py`, `builder.py`)
+- `RelationshipRule`: Declares `priority: int`, `supports()`, `build()`.
+- `GithubRule` (Priority 10), `TaskRule` (Priority 20), `MentorRule` (Priority 30).
+
+### 6. Event Bus & CQRS Projections (`events.py`, `commands.py`, `queries.py`, `projections.py`)
+- `EventBus`: Decoupled event bus emitting immutable `EvidenceEvent`s.
+- `ProjectionWorker`: Listens to events and updates read models (`TaskProjection`, `ProjectProjection`).
+- Write Commands & Handlers (`CollectArtifactsCommand`, `CreateRelationshipCommand`, `VerifyEvidenceCommand`, `RejectEvidenceCommand`).
+- Read Queries & Repositories (`GetTaskEvidenceQuery`, `GetProjectEvidenceQuery`).
+
+---
+
+## Infrastructure REST API (`routes.py`)
+
+Mounted under `/api/v1/evidence-graph`:
+- `POST /api/v1/evidence-graph/collect/{project_id}` ➔ Executes `CollectArtifactsCommand` pipeline.
+- `GET /api/v1/evidence-graph/task/{task_id}` ➔ Executes `GetTaskEvidenceQuery` via `TaskProjectionRepository`.
+- `GET /api/v1/evidence-graph/project/{project_id}` ➔ Executes `GetProjectEvidenceQuery` via `ProjectProjectionRepository`.
+- `POST /api/v1/evidence-graph/relationship` ➔ Executes `CreateRelationshipCommand`.
+- `POST /api/v1/evidence-graph/record/{evidence_id}/verify` ➔ Executes `VerifyEvidenceCommand`.
+- `POST /api/v1/evidence-graph/record/{evidence_id}/reject` ➔ Executes `RejectEvidenceCommand`.
+
+---
+
+## Verification & Quality Strategy (`apps/api/tests/test_evidence_graph.py`)
+
+1. **Learning Activity & Adapter Tests**:
+   - Ingestion of internal `LearningActivityRecord` and transformation into `CanonicalArtifact`.
+   - `ProviderRegistry` versioning and capabilities check.
+2. **Pipeline & Dual Store Tests**:
+   - 8-stage `ProcessingPipeline` execution with `ProcessingContext`.
+   - `ArtifactStore` raw persistence & `EvidenceStore` promotion.
+3. **CQRS & Event Bus Tests**:
+   - Priority-based `RelationshipBuilder` execution.
+   - `EventBus` publish/subscribe and `ProjectionWorker` read repository updates.
+4. **Regression Gate**:
+   - `python -m pytest tests/` (100% PASS).
+   - `npm run lint` (0 warnings / 0 errors).
+   - `npx next build` (Successful compilation).

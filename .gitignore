@@ -15,7 +15,6 @@ dist-ssr/
 out/
 build/
 *.local
-*.tsbuildinfo
 
 # Python
 __pycache__/
@@ -70,7 +69,3 @@ Thumbs.db
 
 # Platform Deployments
 .vercel/
-
-# IDE Internal
-.gemini/
-

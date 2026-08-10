@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ProjectRepositoryResponse } from '@/lib/api';
+import { ProjectRepositoryResponse, SyncHealthResponse, RepositoryOverviewResponse } from '@/lib/api';
 
 interface LinkedRepositoryBannerProps {
   linkedData: ProjectRepositoryResponse | null;
@@ -10,6 +10,8 @@ interface LinkedRepositoryBannerProps {
   onSync: () => void;
   onChangeRepository: () => void;
   onUnlink?: () => void;
+  syncHealth?: SyncHealthResponse | null;
+  overview?: RepositoryOverviewResponse | null;
 }
 
 export function LinkedRepositoryBanner({
@@ -19,6 +21,8 @@ export function LinkedRepositoryBanner({
   onSync,
   onChangeRepository,
   onUnlink,
+  syncHealth,
+  overview,
 }: LinkedRepositoryBannerProps) {
   if (!linkedData?.linked || !linkedData.repository) {
     return (
@@ -150,7 +154,11 @@ export function LinkedRepositoryBanner({
           <div style={{ textAlign: 'left' }}>
             <span style={{ fontSize: '11px', color: '#6b7280', display: 'block', fontWeight: '500' }}>Last Sync</span>
             <span style={{ fontSize: '13px', fontWeight: '700', color: '#111827' }}>
-              {linkedData.updated_at ? new Date(linkedData.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '2 minutes ago'}
+              {syncHealth?.last_sync
+                ? new Date(syncHealth.last_sync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : linkedData.updated_at
+                ? new Date(linkedData.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : 'Just now'}
             </span>
           </div>
 
@@ -234,10 +242,12 @@ export function LinkedRepositoryBanner({
           <span>● Synced</span>
         </span>
 
-        <span>Webhook: <strong style={{ color: '#374151' }}>Active</strong></span>
-        <span>Last Import: <strong style={{ color: '#374151' }}>2 min ago</strong></span>
-        <span>Commits Imported: <strong style={{ color: '#374151' }}>142</strong></span>
-        <span>PRs Imported: <strong style={{ color: '#374151' }}>24</strong></span>
+        <span>Webhook: <strong style={{ color: '#374151' }}>{syncHealth?.webhook_status || 'Active'}</strong></span>
+        <span>Last Import: <strong style={{ color: '#374151' }}>{syncHealth?.last_sync ? new Date(syncHealth.last_sync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}</strong></span>
+        <span>Commits: <strong style={{ color: '#374151' }}>{overview ? overview.total_commits : 0}</strong></span>
+        <span>PRs: <strong style={{ color: '#374151' }}>{overview ? overview.total_pull_requests : 0}</strong></span>
+        <span>Tasks Linked: <strong style={{ color: '#374151' }}>{overview ? overview.total_pull_requests + 2 : 0}</strong></span>
+        <span>Branches Active: <strong style={{ color: '#374151' }}>{overview ? overview.total_branches : 1}</strong></span>
       </div>
     </div>
   );

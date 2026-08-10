@@ -12,7 +12,12 @@ export default defineConfig([
     '**/test-results/**',
     '**/coverage/**',
     '**/node_modules/**',
+    '.archive/**',
+    '.agent/**',
+    '.agents/**',
+    '.gsd/**',
     'apps/api/**',
+    'AI-company/**',
   ]),
 
   {
@@ -23,7 +28,10 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      globals: globals.browser,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
     rules: {

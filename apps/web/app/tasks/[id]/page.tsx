@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { api } from '../../../lib/api';
 import Breadcrumbs from '../../../components/Breadcrumbs';
+import { TaskTraceabilityCard } from '../../../components/github/TaskTraceabilityCard';
+import { EvidenceGraphCard } from '../../../components/github/EvidenceGraphCard';
 
 type Task = {
   id: string;
@@ -102,7 +104,7 @@ export default function TaskPage() {
 
       {/* 2-COLUMN TASK WORKSPACE GRID */}
       <div className="teamSpaceGrid">
-        {/* LEFT COLUMN: TASK SPEC & LEARNING RESOURCES */}
+        {/* LEFT COLUMN: TASK SPEC & LEARNING RESOURCES & TRACEABILITY */}
         <div style={{ display: 'grid', gap: 20 }}>
           <section className="card">
             <h2 style={{ fontSize: 18, margin: '0 0 12px', fontFamily: 'Georgia, serif' }}>🎯 Completion Criteria (Done When)</h2>
@@ -117,6 +119,12 @@ export default function TaskPage() {
               <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6, color: 'var(--ink)' }}>{t.completion_criteria}</p>
             </div>
           </section>
+
+          {/* SPRINT 5: TASK ↔ PR TRACEABILITY ENGINE CARD */}
+          <TaskTraceabilityCard taskId={t.id} />
+
+          {/* SPRINT 6: EVIDENCE GRAPH & BUNDLE STORE CARD */}
+          <EvidenceGraphCard taskId={t.id} projectId={t.project_id} />
 
           <section className="card">
             <h2 style={{ fontSize: 18, margin: '0 0 12px', fontFamily: 'Georgia, serif' }}>🛠️ Required Skills & Frameworks</h2>

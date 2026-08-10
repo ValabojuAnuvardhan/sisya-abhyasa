@@ -15,6 +15,8 @@ from app.api.routes.mentor import router as mentor_router
 from app.api.routes.recruiter import router as recruiter_router
 from app.api.routes.analytics import router as analytics_router
 from app.api.routes.evaluation import router as evaluation_router
+from app.github.task_traceability.routes import router as task_traceability_router
+from app.github.evidence_graph.routes import router as evidence_graph_router
 from app.core.config import settings
 
 app = FastAPI(title=settings.app_name, version="1.1.0")
@@ -28,6 +30,8 @@ app.include_router(project_discovery_router, prefix="/api/v1")
 app.include_router(projects_router, prefix="/api/v1")
 app.include_router(github_router, prefix="/api/v1")
 app.include_router(github_oauth_router, prefix="/api/v1")
+app.include_router(task_traceability_router, prefix="/api/v1")
+app.include_router(evidence_graph_router, prefix="/api/v1")
 app.include_router(proof_router, prefix="/api/v1")
 app.include_router(team_space_router, prefix="/api/v1")
 app.include_router(community_router, prefix="/api/v1")

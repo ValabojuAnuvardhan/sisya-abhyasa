@@ -19,17 +19,17 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'apps/web/package-lock.json'
 
-      - name: Install Web Dependencies
+      - name: Install Root & Web Dependencies
         run: |
-          cd apps/web
           npm ci
+          cd apps/web && npm ci
 
-      - name: Run Web ESLint
-        run: |
-          cd apps/web
-          npm run lint
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Type Check
+        run: npm run typecheck
 
   api-tests:
     name: API Unit & Integration Tests
@@ -43,12 +43,12 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: 'apps/api/requirements.txt'
 
       - name: Install API Dependencies
         run: |
           cd apps/api
           pip install -r requirements.txt
+          pip install pytest pytest-cov
 
       - name: Run pytest
         env:
@@ -57,7 +57,7 @@ jobs:
           PYTHONPATH: "."
         run: |
           cd apps/api
-          pytest tests/
+          pytest --cov=app tests/
 
   web-build:
     name: Web Production Build
@@ -71,10 +71,30 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'apps/web/package-lock.json'
 
       - name: Install Web Dependencies & Build
         run: |
           cd apps/web
           npm ci
           npm run build
+
+  playwright-e2e:
+    name: Playwright E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies & Playwright Browsers
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run Playwright Tests
+        run: npx playwright test

@@ -438,3 +438,103 @@ def get_evidence_summary(
     }
 
 
+# ============================================================================
+# SPRINT 4 LIVE ANALYTICS ENDPOINTS
+# ============================================================================
+
+from app.github.analytics_service import GitHubAnalyticsService
+from app.github.analytics_schemas import (
+    RepositoryOverviewResponse,
+    CommitAnalyticsResponse,
+    PullRequestAnalyticsResponse,
+    BranchAnalyticsResponse,
+    ContributorsAnalyticsResponse,
+    WeeklyActivityResponse,
+    CodeChurnResponse,
+    SyncHealthResponse,
+    DashboardAnalyticsResponse,
+)
+
+@router.get("/analytics/dashboard/{project_id}", response_model=DashboardAnalyticsResponse)
+def get_dashboard_analytics(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_dashboard_analytics(db, project_id)
+
+@router.get("/analytics/overview/{project_id}", response_model=RepositoryOverviewResponse)
+def get_analytics_overview(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_repository_overview(db, project_id)
+
+@router.get("/analytics/commits/{project_id}", response_model=CommitAnalyticsResponse)
+def get_analytics_commits(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_commit_analytics(db, project_id)
+
+@router.get("/analytics/pull-requests/{project_id}", response_model=PullRequestAnalyticsResponse)
+def get_analytics_pull_requests(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_pr_analytics(db, project_id)
+
+@router.get("/analytics/branches/{project_id}", response_model=BranchAnalyticsResponse)
+def get_analytics_branches(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_branch_analytics(db, project_id)
+
+@router.get("/analytics/contributors/{project_id}", response_model=ContributorsAnalyticsResponse)
+def get_analytics_contributors(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_contributor_analytics(db, project_id)
+
+@router.get("/analytics/activity/{project_id}", response_model=WeeklyActivityResponse)
+def get_analytics_activity(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_weekly_activity(db, project_id)
+
+@router.get("/analytics/churn/{project_id}", response_model=CodeChurnResponse)
+def get_analytics_churn(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_code_churn(db, project_id)
+
+@router.get("/analytics/sync-health/{project_id}", response_model=SyncHealthResponse)
+def get_analytics_sync_health(
+    project_id: UUID,
+    principal: AuthPrincipal = Depends(require_principal),
+    db: Session = Depends(get_db)
+):
+    _get_user(principal, db)
+    return GitHubAnalyticsService.get_sync_health(db, project_id)
+
+
+

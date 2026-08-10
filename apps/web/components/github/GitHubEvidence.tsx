@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   GitHubStatusResponse,
   ProjectRepositoryResponse,
+  DashboardAnalyticsResponse,
   getGitHubStatus,
   disconnectGitHub,
   refreshGitHubConnection,
@@ -11,6 +12,7 @@ import {
   getProjectLinkedRepository,
   getUserProjects,
   syncProjectRepository,
+  getDashboardAnalytics,
   ProjectItem,
 } from '@/lib/api';
 
@@ -20,10 +22,12 @@ import { EvidenceTimeline } from './EvidenceTimeline';
 import { RecentActivityFeed } from './RecentActivityFeed';
 import { RepositorySummarySidebar } from './RepositorySummarySidebar';
 import { ProjectRepoSelectorModal } from './ProjectRepoSelectorModal';
+import { AIVerificationCard } from './AIVerificationCard';
 
 export function GitHubEvidence() {
   const [status, setStatus] = useState<GitHubStatusResponse | null>(null);
   const [linkedData, setLinkedData] = useState<ProjectRepositoryResponse | null>(null);
+  const [analytics, setAnalytics] = useState<DashboardAnalyticsResponse | null>(null);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [selectedProjectId, setSelectedProjectId] = useState<string>('');
 
@@ -43,6 +47,16 @@ export function GitHubEvidence() {
     }
   };
 
+  const fetchAnalytics = async (projectId: string) => {
+    if (!projectId) return;
+    try {
+      const data = await getDashboardAnalytics(projectId);
+      setAnalytics(data);
+    } catch {
+      setAnalytics(null);
+    }
+  };
+
   const fetchProjectsAndLinkedRepo = async () => {
     try {
       const list = await getUserProjects();
@@ -52,9 +66,11 @@ export function GitHubEvidence() {
         setSelectedProjectId(pId);
         const repoData = await getProjectLinkedRepository(pId);
         setLinkedData(repoData);
+        fetchAnalytics(pId);
       }
     } catch {
       setLinkedData({ linked: false });
+      setAnalytics(null);
     }
   };
 
@@ -62,6 +78,13 @@ export function GitHubEvidence() {
     fetchStatus();
     fetchProjectsAndLinkedRepo();
   }, []);
+
+  useEffect(() => {
+    if (selectedProjectId) {
+      getProjectLinkedRepository(selectedProjectId).then(setLinkedData).catch(() => setLinkedData({ linked: false }));
+      fetchAnalytics(selectedProjectId);
+    }
+  }, [selectedProjectId]);
 
   const handleConnect = async () => {
     setActionLoading(true);
@@ -84,6 +107,7 @@ export function GitHubEvidence() {
       await disconnectGitHub();
       setStatus({ connected: false });
       setLinkedData({ linked: false });
+      setAnalytics(null);
     } catch (err: any) {
       alert(err.message || 'Failed to disconnect GitHub.');
     } finally {
@@ -99,6 +123,7 @@ export function GitHubEvidence() {
       if (selectedProjectId) {
         const repoData = await getProjectLinkedRepository(selectedProjectId);
         setLinkedData(repoData);
+        await fetchAnalytics(selectedProjectId);
       }
     } catch (err: any) {
       alert(err.message || 'Failed to refresh connection.');
@@ -114,10 +139,12 @@ export function GitHubEvidence() {
       await syncProjectRepository(selectedProjectId);
       const repoData = await getProjectLinkedRepository(selectedProjectId);
       setLinkedData(repoData);
+      await fetchAnalytics(selectedProjectId);
     } catch {
       if (selectedProjectId) {
         const repoData = await getProjectLinkedRepository(selectedProjectId);
         setLinkedData(repoData);
+        await fetchAnalytics(selectedProjectId);
       }
     } finally {
       setActionLoading(false);
@@ -185,6 +212,8 @@ export function GitHubEvidence() {
         actionLoading={actionLoading}
         onSync={handleSyncRepository}
         onChangeRepository={() => setIsModalOpen(true)}
+        syncHealth={analytics?.sync_health}
+        overview={analytics?.overview}
       />
 
       {/* 2-Column Main Layout */}
@@ -196,15 +225,16 @@ export function GitHubEvidence() {
           alignItems: 'start',
         }}
       >
-        {/* Left Column (Timeline & Activity) */}
+        {/* Left Column (Timeline, AI Verification & Activity) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', minWidth: 0 }}>
-          <EvidenceTimeline projectId={selectedProjectId} />
-          <RecentActivityFeed />
+          <AIVerificationCard projectId={selectedProjectId} />
+          <EvidenceTimeline projectId={selectedProjectId} overview={analytics?.overview} branches={analytics?.branches} />
+          <RecentActivityFeed projectId={selectedProjectId} overview={analytics?.overview} latestCommit={analytics?.commits.latest_commit} />
         </div>
 
         {/* Right Column (Sidebar Summary & Skills Earned) */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <RepositorySummarySidebar projectId={selectedProjectId} />
+          <RepositorySummarySidebar projectId={selectedProjectId} overview={analytics?.overview} />
         </div>
       </div>
 
@@ -215,6 +245,7 @@ export function GitHubEvidence() {
           setIsModalOpen(false);
           if (selectedProjectId) {
             getProjectLinkedRepository(selectedProjectId).then(setLinkedData).catch(() => {});
+            fetchAnalytics(selectedProjectId);
           }
         }}
       />
