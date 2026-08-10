@@ -129,7 +129,7 @@ function App() {
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} loggedIn={loggedIn} setLoginStep={setLoginStep} />
 
         <main style={{ flex: 1, minWidth: 0, padding: "24px 32px", overflowX: "hidden" }}>
-          {!loggedIn && ["projects", "github", "progress", "skill_graph", "overview", "kanban", "settings", "analytics", "milestones"].includes(activeTab) ? (
+          {!loggedIn && ["projects", "github", "progress", "skill_graph", "kanban", "settings", "analytics", "recruiter"].includes(activeTab) ? (
             <div style={{ maxWidth: 600, margin: "60px auto", textAlign: "center", background: "#ffffff", borderRadius: 16, padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
               <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>Student Workspace Protected</h2>
@@ -142,7 +142,7 @@ function App() {
             </div>
           ) : (
             <>
-              {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab studentStats={studentStats} />}
+              {activeTab === "github" && <GitHubEvidenceTab studentStats={studentStats} />}
               {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
               {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
               {activeTab === "projects" && (
@@ -172,7 +172,6 @@ function App() {
               {activeTab === "analytics" && <TeamAnalyticsTab studentStats={studentStats} />}
               {activeTab === "kanban" && <KanbanTab />}
               {activeTab === "settings" && <SettingsTab studentStats={studentStats} />}
-              {activeTab === "milestones" && <ProgressTab loggedIn={loggedIn} setLoginStep={setLoginStep} studentStats={studentStats} setStudentStats={setStudentStats} generatedRoadmaps={generatedRoadmaps} myProjects={myProjects} setViewingRoadmap={setViewingRoadmap} setActiveTab={setActiveTab} />}
             </>
           )}
         </main>

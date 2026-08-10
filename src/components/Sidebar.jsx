@@ -14,11 +14,9 @@ export default function Sidebar({ activeTab, setActiveTab, loggedIn, setLoginSte
   ];
 
   const workspaceNav = [
-    { id: "overview", label: "Overview", icon: "🎛️" },
     { id: "kanban", label: "Kanban Tasks", icon: "📋" },
-    { id: "analytics", label: "Team Space & Chat", icon: "💬" },
-    { id: "milestones", label: "Milestones", icon: "🚩" },
-    { id: "recruiter", label: "Team Members", icon: "👥" },
+    { id: "analytics", label: "Team Analytics", icon: "📊" },
+    { id: "recruiter", label: "Recruiter Portfolio", icon: "💼" },
     { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
