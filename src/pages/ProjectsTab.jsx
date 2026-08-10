@@ -2,22 +2,24 @@ import { useState } from "react";
 import { projects as _initialMockProjects } from "../data/mockData";
 
 export default function ProjectsTab({
-  _loggedIn,
-  _setLoginStep,
-  _studentStats,
-  _myProjects,
-  _setMyProjects,
-  _setCollaboratorProjects,
+  loggedIn,
+  setLoginStep,
+  studentStats,
+  myProjects,
+  setMyProjects,
+  setCollaboratorProjects,
 }) {
+  const leadName = studentStats?.name || "Project Lead";
+  const leadGithub = studentStats?.githubUsername ? `@${studentStats.githubUsername}` : "@project-lead";
 
-  // Current active role simulator: 'studentA' (Anuvardhan - Owner) or 'studentB' (Priya - Candidate/Collaborator)
+  // Current active role simulator: 'studentA' (Owner) or 'studentB' (Collaborator)
   const [activeRole, setActiveRole] = useState("studentA");
 
   // Project state for the primary collaborative project
   const [projectState, setProjectState] = useState({
     id: "proj-ecosmart-101",
     name: "EcoSmart Ocean Plastic Tracking",
-    owner: "Anuvardhan (Student A)",
+    owner: `${leadName} (Project Lead)`,
     organization: "Student Created",
     source: "Community",
     description: "Build real-time satellite & GIS sensor tracking for ocean plastic accumulation zones.",
@@ -27,17 +29,17 @@ export default function ProjectsTab({
     discoverable: true,
     progress: 35,
     members: [
-      { id: "user-a", name: "Anuvardhan (Student A)", role: "Owner", github: "@anuvardhan-dev" },
+      { id: "user-a", name: `${leadName} (Project Lead)`, role: "Owner", github: leadGithub },
     ],
     joinRequests: [
       {
         id: "req-b-01",
         userId: "user-b",
-        userName: "Priya (Student B)",
+        userName: "Priya (Team Member)",
         userAvatar: "P",
         userSkills: ["React", "Python", "GIS"],
         userTargetRole: "Full Stack Developer",
-        message: "Hi Anuvardhan! I have experience with Python and GIS, and I'd love to learn FastAPI by building Task #1.",
+        message: `Hi ${leadName.split(" ")[0]}! I have experience with Python and GIS, and I'd love to learn FastAPI by building Task #1.`,
         status: "pending", // pending | accepted | rejected
         createdAt: "Just now",
       },

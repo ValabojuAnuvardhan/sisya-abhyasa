@@ -1,15 +1,19 @@
 import { useState } from "react";
 
-export default function RecruiterViewTab({ setActiveTab }) {
+export default function RecruiterViewTab({ setActiveTab, studentStats }) {
   const [copied, setCopied] = useState(false);
   const [selectedEvidence, setSelectedEvidence] = useState(null);
 
+  const name = studentStats?.name || "Student Builder Portfolio";
+  const username = studentStats?.githubUsername || "student-portfolio";
+  const targetRole = studentStats?.targetCareer || "Full Stack Software Engineer";
+
   const [profile] = useState({
-    name: "Student Builder Portfolio",
-    headline: "Full Stack Software Engineer | React, FastAPI & Cloud Systems",
-    username: "student-portfolio",
-    targetRole: "Senior Software Engineer",
-    githubRepo: "https://github.com/sisya-abhyasa",
+    name,
+    headline: `${targetRole} | React, FastAPI & Cloud Systems`,
+    username,
+    targetRole,
+    githubRepo: `https://github.com/${username}`,
     collaborationScore: 92.5,
     mergedPrs: 18,
     commits: 142,

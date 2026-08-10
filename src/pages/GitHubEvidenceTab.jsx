@@ -88,30 +88,27 @@ export default function GitHubEvidenceTab() {
         </div>
       )}
 
-      {/* Breadcrumb Navigation */}
-      <div style={{ display: "flex", gap: 8, fontSize: 13, color: "#64748b", marginBottom: 16, fontWeight: 500 }}>
-        <span>Projects</span>
-        <span>›</span>
-        <span>Student Task Manager</span>
-        <span>›</span>
-        <span style={{ color: "#0f172a", fontWeight: 600 }}>GitHub Evidence</span>
+      {/* Header Breadcrumb */}
+      <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>
+        Projects › Student Task Manager › <strong>GitHub Evidence</strong>
       </div>
 
-      {/* Page Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 16, marginBottom: 24 }}>
-        <div style={{ width: 44, height: 44, borderRadius: 12, background: "#2563eb", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0 }}>
-          🛡️
-        </div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", margin: "0 0 4px 0", letterSpacing: "-0.02em" }}>GitHub Evidence</h1>
-          <p style={{ fontSize: 14, color: "#64748b", margin: 0 }}>
-            Track your contributions, pull requests, and build your verified project experience.
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "#2563eb", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+              🛡️
+            </div>
+            <h1 style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", margin: 0 }}>GitHub Evidence</h1>
+          </div>
+          <p style={{ fontSize: 14, color: "#64748b", marginTop: 4, margin: 0 }}>
+            Track contributions and verified pull requests for <strong>{studentName}</strong> (<code>@{username}</code>).
           </p>
         </div>
       </div>
 
-      {/* Connected Banner Card */}
-      <div className="card" style={{ padding: "20px 24px", marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      {/* GitHub Connected Card */}
+      <div className="card" style={{ padding: "20px 24px", marginBottom: 24, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#10b981", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 800 }}>
             ✓
@@ -120,7 +117,7 @@ export default function GitHubEvidenceTab() {
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", margin: 0 }}>GitHub Connected</h3>
             <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#64748b", marginTop: 4 }}>
               <span>🐱</span>
-              <span>Connected as <strong>@student-dev</strong></span>
+              <span>Connected as <strong>@{username}</strong></span>
             </div>
           </div>
         </div>
@@ -136,8 +133,8 @@ export default function GitHubEvidenceTab() {
               <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: 0 }}>Student Task Manager</h2>
               <span className="badge-public">Public</span>
             </div>
-            <a href="https://github.com/sisya-abhyasa" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "#2563eb", textDecoration: "none", fontWeight: 600, marginTop: 6, display: "inline-block" }}>
-              github.com/student-dev/student-task-manager ↗
+            <a href={`https://github.com/${username}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "#2563eb", textDecoration: "none", fontWeight: 600, marginTop: 6, display: "inline-block" }}>
+              github.com/{username}/student-task-manager ↗
             </a>
           </div>
 

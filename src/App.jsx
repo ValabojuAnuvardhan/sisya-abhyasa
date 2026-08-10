@@ -142,7 +142,7 @@ function App() {
             </div>
           ) : (
             <>
-              {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab />}
+              {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab studentStats={studentStats} />}
               {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
               {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
               {activeTab === "projects" && (
@@ -168,10 +168,10 @@ function App() {
                 />
               )}
               {activeTab === "skill_graph" && <SkillGraphTab />}
-              {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} />}
-              {activeTab === "analytics" && <TeamAnalyticsTab />}
+              {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} studentStats={studentStats} />}
+              {activeTab === "analytics" && <TeamAnalyticsTab studentStats={studentStats} />}
               {activeTab === "kanban" && <KanbanTab />}
-              {activeTab === "settings" && <SettingsTab />}
+              {activeTab === "settings" && <SettingsTab studentStats={studentStats} />}
               {activeTab === "milestones" && <ProgressTab loggedIn={loggedIn} setLoginStep={setLoginStep} studentStats={studentStats} setStudentStats={setStudentStats} generatedRoadmaps={generatedRoadmaps} myProjects={myProjects} setViewingRoadmap={setViewingRoadmap} setActiveTab={setActiveTab} />}
             </>
           )}

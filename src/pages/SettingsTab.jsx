@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-export default function SettingsTab() {
+export default function SettingsTab({ studentStats }) {
   const [saved, setSaved] = useState(false);
   const [formData, setFormData] = useState({
-    name: "Student Builder",
-    username: "student-dev",
-    email: "student@sisya-abhyasa.io",
-    bio: "Full Stack Software Engineer | React, FastAPI & Cloud Systems",
-    githubRepo: "https://github.com/sisya-abhyasa",
+    name: studentStats?.name || "Student Builder",
+    username: studentStats?.githubUsername || "student-dev",
+    email: studentStats?.email || "student@sisya-abhyasa.io",
+    bio: `${studentStats?.targetCareer || "Full Stack Software Engineer"} | React, FastAPI & Cloud Systems`,
+    githubRepo: studentStats?.githubUsername ? `https://github.com/${studentStats.githubUsername}` : "https://github.com/sisya-abhyasa",
     autoSync: true
   });
 
