@@ -3,11 +3,11 @@ import { useState } from "react";
 export default function SettingsTab() {
   const [saved, setSaved] = useState(false);
   const [formData, setFormData] = useState({
-    name: "Anu Vardhan",
-    username: "anuvardhan-v",
-    email: "anuvardhan@sisya-abhyasa.io",
+    name: "Student Builder",
+    username: "student-dev",
+    email: "student@sisya-abhyasa.io",
     bio: "Full Stack Software Engineer | React, FastAPI & Cloud Systems",
-    githubRepo: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+    githubRepo: "https://github.com/sisya-abhyasa",
     autoSync: true
   });
 

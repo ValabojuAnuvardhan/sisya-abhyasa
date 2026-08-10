@@ -348,7 +348,7 @@ export default function ProjectsTab({
             <div className="recoleta" style={{ fontSize: 22, color: "#ffffff" }}>
               Active User Persona:{" "}
               <span style={{ color: isStudentA ? "#38bdf8" : "#f472b6" }}>
-                {isStudentA ? "Student A (Project Owner — Anuvardhan)" : "Student B (Collaborator Candidate — Priya)"}
+                {isStudentA ? "Project Lead (Owner)" : "Team Member (Collaborator)"}
               </span>
             </div>
             <p className="proxima" style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, margin: 0 }}>
@@ -370,7 +370,7 @@ export default function ProjectsTab({
                 transition: "all 0.2s ease",
               }}
             >
-              👤 Switch to Student A (Owner)
+              👤 Switch to Project Lead (Owner)
             </button>
             <button
               onClick={() => setActiveRole("studentB")}
@@ -386,7 +386,7 @@ export default function ProjectsTab({
                 transition: "all 0.2s ease",
               }}
             >
-              👩‍💻 Switch to Student B (Collaborator)
+              👩‍💻 Switch to Team Member (Collaborator)
             </button>
           </div>
         </div>

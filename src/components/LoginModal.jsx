@@ -41,23 +41,8 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
 
   const handleCredentialContinue = (e) => {
     if (e) e.preventDefault();
+    if (!name.trim()) setName("Student Builder");
     setStep(2);
-  };
-
-  const handleQuickDemoLogin = () => {
-    setStudentStats({
-      name: "Anu Vardhan",
-      year: "3rd Year · CSE",
-      avatar: "AV",
-      targetCareer: "AI / ML Engineer",
-      commits: 12,
-      tasks: 3,
-      badge: "Core Builder ⚡",
-      skills: ["React", "Python", "FastAPI", "ML/AI"],
-      githubUsername: "valabojuanuvardhan",
-    });
-    setLoggedIn(true);
-    setLoginStep(false);
   };
 
   const handleProfileContinue = () => {
@@ -77,7 +62,7 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
       targetCareer: targetCareer || "AI / ML Engineer",
       commits: 2,
       tasks: 1,
-      badge: "Active Hacker 🔥",
+      badge: "Active Builder 🔥",
       skills: selectedSkills.length > 0 ? selectedSkills : ["React", "Python"],
       githubUsername: githubUsername.trim().replace(/^@/, ""),
     });
@@ -105,32 +90,32 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
           <form onSubmit={handleCredentialContinue}>
             <div className="recoleta" style={{ fontSize: 28, marginBottom: 6 }}>Welcome 👋</div>
             <p className="proxima" style={{ fontSize: 13, color: "#7a6f67", marginBottom: 20 }}>
-              Your Śiṣya Abhyāsa journey starts here.
+              Sign in with your student credentials or authorized GitHub identity.
             </p>
 
             <button
               type="button"
-              className="mint-btn"
+              className="ghost-btn"
               style={{
-                width: "100%", padding: "14px", fontSize: 14, marginBottom: 20,
-                background: "linear-gradient(135deg, #00A19B 0%, #007A76 100%)",
-                boxShadow: "0 4px 14px rgba(0,161,155,0.3)"
+                width: "100%", padding: "12px", fontSize: 14, marginBottom: 16,
+                borderColor: "#0f172a", color: "#0f172a", fontWeight: 700,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 10
               }}
-              onClick={handleQuickDemoLogin}
+              onClick={handleCredentialContinue}
             >
-              ⚡ Quick Demo Login (1-Tap)
+              <span>🐱</span> Continue with GitHub
             </button>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0", color: "#9a8f87" }}>
               <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.1)" }} />
-              <span className="proxima" style={{ fontSize: 11 }}>OR ENTER DETAILS</span>
+              <span className="proxima" style={{ fontSize: 11 }}>OR EMAIL</span>
               <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.1)" }} />
             </div>
 
             <input
               className="input"
               type="email"
-              placeholder="Email address (e.g. student@college.edu)"
+              placeholder="Student email (e.g. student@university.edu)"
               value={email}
               onChange={e => setEmail(e.target.value)}
               style={{ marginBottom: 12 }}
@@ -145,10 +130,10 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
             />
             <button
               type="submit"
-              className="ghost-btn"
+              className="mint-btn"
               style={{ width: "100%", padding: "12px", fontSize: 14 }}
             >
-              Continue with Email →
+              Sign In →
             </button>
           </form>
         )}

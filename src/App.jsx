@@ -16,13 +16,13 @@ import KanbanTab from "./pages/KanbanTab";
 import SettingsTab from "./pages/SettingsTab";
 
 const DEFAULT_STATS = {
-  name: "Anu Vardhan",
-  year: "3rd Year · CSE",
-  avatar: "AV",
+  name: "Student Builder",
+  year: "3rd Year · CS",
+  avatar: "SB",
   commits: 142,
   tasks: 24,
   skills: ["FastAPI", "Next.js", "PostgreSQL", "Git", "Docker"],
-  githubUsername: "anuvardhan-v",
+  githubUsername: "student-dev",
 };
 
 function App() {

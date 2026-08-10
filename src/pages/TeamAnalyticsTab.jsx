@@ -10,9 +10,9 @@ export default function TeamAnalyticsTab() {
       { date: "Jul 30", commits: 24, prs: 5, reviews: 8 },
     ],
     members: [
-      { name: "Anuvardhan Valaboju", tasks: 14, share: 45.0, status: "Active" },
-      { name: "Collaborator 1", tasks: 9, share: 30.0, status: "Active" },
-      { name: "Collaborator 2", tasks: 8, share: 25.0, status: "Active" },
+      { name: "Project Lead (Owner)", tasks: 14, share: 45.0, status: "Active" },
+      { name: "Team Member 1", tasks: 9, share: 30.0, status: "Active" },
+      { name: "Team Member 2", tasks: 8, share: 25.0, status: "Active" },
     ]
   });
 

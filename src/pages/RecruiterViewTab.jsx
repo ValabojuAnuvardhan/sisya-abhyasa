@@ -5,11 +5,11 @@ export default function RecruiterViewTab({ setActiveTab }) {
   const [selectedEvidence, setSelectedEvidence] = useState(null);
 
   const [profile] = useState({
-    name: "Anuvardhan Valaboju",
+    name: "Student Builder Portfolio",
     headline: "Full Stack Software Engineer | React, FastAPI & Cloud Systems",
-    username: "anuvardhan",
+    username: "student-portfolio",
     targetRole: "Senior Software Engineer",
-    githubRepo: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+    githubRepo: "https://github.com/sisya-abhyasa",
     collaborationScore: 92.5,
     mergedPrs: 18,
     commits: 142,

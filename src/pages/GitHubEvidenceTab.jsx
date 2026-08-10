@@ -9,45 +9,45 @@ export default function GitHubEvidenceTab() {
     {
       id: "PR #12",
       title: "Authentication",
-      author: "anuvardhan-v",
+      author: "student-dev",
       time: "3 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+142 lines, -18 lines",
-      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+      prUrl: "https://github.com/sisya-abhyasa",
       hmac: "sha256-a1b2c3d4e5f67890123456789abcdef0123456789abcdef0123456789abcdef0"
     },
     {
       id: "PR #18",
       title: "Dashboard",
-      author: "anuvardhan-v",
+      author: "student-dev",
       time: "5 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+320 lines, -45 lines",
-      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+      prUrl: "https://github.com/sisya-abhyasa",
       hmac: "sha256-9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba"
     },
     {
       id: "PR #21",
       title: "Kanban",
-      author: "anuvardhan-v",
+      author: "student-dev",
       time: "1 day ago",
       status: "Pending Review",
       isMerged: false,
       diff: "+95 lines, -2 lines",
-      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+      prUrl: "https://github.com/sisya-abhyasa",
       hmac: "sha256-11223344556677889900aabbccddeeff11223344556677889900aabbccddeeff"
     },
     {
       id: "PR #26",
       title: "Task AI Mentor Integration",
-      author: "anuvardhan-v",
+      author: "student-dev",
       time: "6 days ago",
       status: "Verified",
       isMerged: true,
       diff: "+410 lines, -60 lines",
-      prUrl: "https://github.com/ValabojuAnuvardhan/sisya-abhyasa",
+      prUrl: "https://github.com/sisya-abhyasa",
       hmac: "sha256-ffeeddccbbaa00998877665544332211ffeeddccbbaa00998877665544332211"
     }
   ];
@@ -120,7 +120,7 @@ export default function GitHubEvidenceTab() {
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", margin: 0 }}>GitHub Connected</h3>
             <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#64748b", marginTop: 4 }}>
               <span>🐱</span>
-              <span>Connected as <strong>@anuvardhan-v</strong></span>
+              <span>Connected as <strong>@student-dev</strong></span>
             </div>
           </div>
         </div>
@@ -136,8 +136,8 @@ export default function GitHubEvidenceTab() {
               <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", margin: 0 }}>Student Task Manager</h2>
               <span className="badge-public">Public</span>
             </div>
-            <a href="https://github.com/ValabojuAnuvardhan/sisya-abhyasa" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "#2563eb", textDecoration: "none", fontWeight: 600, marginTop: 6, display: "inline-block" }}>
-              github.com/anuvardhan-v/student-task-manager ↗
+            <a href="https://github.com/sisya-abhyasa" target="_blank" rel="noreferrer" style={{ fontSize: 13, color: "#2563eb", textDecoration: "none", fontWeight: 600, marginTop: 6, display: "inline-block" }}>
+              github.com/student-dev/student-task-manager ↗
             </a>
           </div>
 
