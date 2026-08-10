@@ -126,10 +126,10 @@ function App() {
 
       {/* App Body with Sidebar + Main Workspace Content */}
       <div style={{ display: "flex", flex: 1 }}>
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} loggedIn={loggedIn} setLoginStep={setLoginStep} />
 
         <main style={{ flex: 1, minWidth: 0, padding: "24px 32px", overflowX: "hidden" }}>
-          {!loggedIn && ["projects", "github", "overview", "kanban", "settings", "analytics", "progress", "milestones"].includes(activeTab) ? (
+          {!loggedIn && ["projects", "github", "progress", "skill_graph", "overview", "kanban", "settings", "analytics", "milestones"].includes(activeTab) ? (
             <div style={{ maxWidth: 600, margin: "60px auto", textAlign: "center", background: "#ffffff", borderRadius: 16, padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
               <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>Student Workspace Protected</h2>
