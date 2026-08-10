@@ -33,7 +33,7 @@ function App() {
         return hash;
       }
     }
-    return "github";
+    return "home";
   });
 
   const setActiveTab = (tab) => {
@@ -57,9 +57,9 @@ function App() {
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [roadmap, setRoadmap] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [loginStep, setLoginStep] = useState(false);
-  const [studentStats, setStudentStats] = useState(DEFAULT_STATS);
+  const [studentStats, setStudentStats] = useState(null);
 
   const [generatedRoadmaps, setGeneratedRoadmaps] = useState([]);
   const [myProjects, setMyProjects] = useState([]);
@@ -85,7 +85,7 @@ function App() {
           teamCapacity: 4,
           discoverable: true,
           progress: 10,
-          members: [{ id: "user-a", name: "Anu Vardhan", role: "Owner" }],
+          members: [{ id: "user-a", name: "Project Lead", role: "Owner" }],
           tasks: [],
         },
         ...prev,
@@ -100,7 +100,7 @@ function App() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "#f8fafc" }}>
-      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} onNewItemCreated={handleNewItemCreated} />
+      <Navbar setLoginStep={setLoginStep} studentStats={studentStats} loggedIn={loggedIn} onNewItemCreated={handleNewItemCreated} />
 
       {loginStep && (
         <LoginModal
@@ -129,37 +129,52 @@ function App() {
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <main style={{ flex: 1, minWidth: 0, padding: "24px 32px", overflowX: "hidden" }}>
-          {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab />}
-          {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
-          {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
-          {activeTab === "projects" && (
-            <ProjectsTab
-              loggedIn={loggedIn}
-              setLoginStep={setLoginStep}
-              studentStats={studentStats}
-              myProjects={myProjects}
-              setMyProjects={setMyProjects}
-              setCollaboratorProjects={setCollaboratorProjects}
-            />
+          {!loggedIn && ["github", "overview", "kanban", "settings", "analytics", "progress", "milestones"].includes(activeTab) ? (
+            <div style={{ maxWidth: 600, margin: "60px auto", textAlign: "center", background: "#ffffff", borderRadius: 16, padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 10px 30px rgba(0,0,0,0.05)" }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
+              <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>Student Workspace Protected</h2>
+              <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>
+                Please sign in with your student credentials or GitHub account to view your verified GitHub evidence, team space, tasks, and skill metrics.
+              </p>
+              <button onClick={() => setLoginStep(true)} className="mint-btn" style={{ padding: "12px 28px", fontSize: 14, fontWeight: 700 }}>
+                Sign In / Sign Up →
+              </button>
+            </div>
+          ) : (
+            <>
+              {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab />}
+              {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
+              {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
+              {activeTab === "projects" && (
+                <ProjectsTab
+                  loggedIn={loggedIn}
+                  setLoginStep={setLoginStep}
+                  studentStats={studentStats}
+                  myProjects={myProjects}
+                  setMyProjects={setMyProjects}
+                  setCollaboratorProjects={setCollaboratorProjects}
+                />
+              )}
+              {activeTab === "progress" && (
+                <ProgressTab
+                  loggedIn={loggedIn}
+                  setLoginStep={setLoginStep}
+                  studentStats={studentStats}
+                  setStudentStats={setStudentStats}
+                  generatedRoadmaps={generatedRoadmaps}
+                  myProjects={myProjects}
+                  setViewingRoadmap={setViewingRoadmap}
+                  setActiveTab={setActiveTab}
+                />
+              )}
+              {activeTab === "skill_graph" && <SkillGraphTab />}
+              {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} />}
+              {activeTab === "analytics" && <TeamAnalyticsTab />}
+              {activeTab === "kanban" && <KanbanTab />}
+              {activeTab === "settings" && <SettingsTab />}
+              {activeTab === "milestones" && <ProgressTab loggedIn={loggedIn} setLoginStep={setLoginStep} studentStats={studentStats} setStudentStats={setStudentStats} generatedRoadmaps={generatedRoadmaps} myProjects={myProjects} setViewingRoadmap={setViewingRoadmap} setActiveTab={setActiveTab} />}
+            </>
           )}
-          {activeTab === "progress" && (
-            <ProgressTab
-              loggedIn={loggedIn}
-              setLoginStep={setLoginStep}
-              studentStats={studentStats}
-              setStudentStats={setStudentStats}
-              generatedRoadmaps={generatedRoadmaps}
-              myProjects={myProjects}
-              setViewingRoadmap={setViewingRoadmap}
-              setActiveTab={setActiveTab}
-            />
-          )}
-          {activeTab === "skill_graph" && <SkillGraphTab />}
-          {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} />}
-          {activeTab === "analytics" && <TeamAnalyticsTab />}
-          {activeTab === "kanban" && <KanbanTab />}
-          {activeTab === "settings" && <SettingsTab />}
-          {activeTab === "milestones" && <ProgressTab loggedIn={loggedIn} setLoginStep={setLoginStep} studentStats={studentStats} setStudentStats={setStudentStats} generatedRoadmaps={generatedRoadmaps} myProjects={myProjects} setViewingRoadmap={setViewingRoadmap} setActiveTab={setActiveTab} />}
         </main>
       </div>
 

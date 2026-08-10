@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NewActionModal, NotificationsDrawer, RewardsModal } from "./ActionModals";
 
-export default function Navbar({ setLoginStep, studentStats, onNewItemCreated }) {
+export default function Navbar({ setLoginStep, studentStats, loggedIn, onNewItemCreated }) {
   const [showNewModal, setShowNewModal] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
@@ -98,67 +98,93 @@ export default function Navbar({ setLoginStep, studentStats, onNewItemCreated })
             )}
           </div>
 
-          {/* Action Buttons */}
-          <button
-            onClick={() => setShowNewModal(true)}
-            className="ghost-btn"
-            style={{
-              borderColor: "#00a19b",
-              color: "#00a19b",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 14px",
-              fontSize: 13,
-              fontWeight: 600,
-              borderRadius: 8
-            }}
-          >
-            <span>+</span> New
-          </button>
+          {loggedIn ? (
+            <>
+              {/* Action Buttons */}
+              <button
+                onClick={() => setShowNewModal(true)}
+                className="ghost-btn"
+                style={{
+                  borderColor: "#00a19b",
+                  color: "#00a19b",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "6px 14px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  borderRadius: 8
+                }}
+              >
+                <span>+</span> New
+              </button>
 
-          {/* Icon Buttons */}
-          <button
-            onClick={() => setShowRewards(true)}
-            style={{ background: "none", border: "none", fontSize: 16, cursor: "pointer", color: "#64748b", padding: 4 }}
-          >
-            🎁
-          </button>
+              {/* Icon Buttons */}
+              <button
+                onClick={() => setShowRewards(true)}
+                style={{ background: "none", border: "none", fontSize: 16, cursor: "pointer", color: "#64748b", padding: 4 }}
+              >
+                🎁
+              </button>
 
-          <div style={{ position: "relative" }}>
+              <div style={{ position: "relative" }}>
+                <button
+                  onClick={() => setShowNotifications(true)}
+                  style={{ background: "none", border: "none", fontSize: 16, cursor: "pointer", color: "#64748b", padding: 4 }}
+                >
+                  🔔
+                </button>
+                <span style={{
+                  position: "absolute",
+                  top: -2,
+                  right: -2,
+                  background: "#ef4444",
+                  color: "#ffffff",
+                  fontSize: 9,
+                  fontWeight: 800,
+                  width: 15,
+                  height: 15,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  3
+                </span>
+              </div>
+
+              {/* User Profile */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => setLoginStep(true)}>
+                <div style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: "50%",
+                  background: "linear-gradient(135deg, #00A19B 0%, #0f172a 100%)",
+                  color: "#ffffff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 12,
+                  fontWeight: 700,
+                }}>
+                  {studentStats ? studentStats.avatar || "SB" : "SB"}
+                </div>
+              </div>
+            </>
+          ) : (
             <button
-              onClick={() => setShowNotifications(true)}
-              style={{ background: "none", border: "none", fontSize: 16, cursor: "pointer", color: "#64748b", padding: 4 }}
+              onClick={() => setLoginStep(true)}
+              className="mint-btn"
+              style={{
+                padding: "8px 18px",
+                fontSize: 13,
+                fontWeight: 700,
+                borderRadius: 8,
+              }}
             >
-              🔔
+              Sign In / Sign Up
             </button>
-            <span style={{
-              position: "absolute",
-              top: -2,
-              right: -2,
-              background: "#ef4444",
-              color: "#ffffff",
-              fontSize: 9,
-              fontWeight: 800,
-              width: 15,
-              height: 15,
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}>
-              3
-            </span>
-          </div>
-
-          {/* User Profile */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }} onClick={() => setLoginStep(true)}>
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80"
-              alt="User Avatar"
-              style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", border: "1px solid #e2e8f0" }}
-            />
-          </div>
+          )}
         </div>
       </header>
     </>

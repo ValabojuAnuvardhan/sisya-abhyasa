@@ -71,9 +71,35 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
   };
 
   return (
-    <div className="overlay" onClick={() => setLoginStep(false)}>
-      <div className="login-card" onClick={e => e.stopPropagation()} style={{ maxWidth: 460 }}>
-
+    <div
+      className="overlay"
+      onClick={() => setLoginStep(false)}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(15, 23, 42, 0.75)",
+        backdropFilter: "blur(8px)",
+        zIndex: 1000,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 16,
+      }}
+    >
+      <div
+        className="login-card"
+        onClick={e => e.stopPropagation()}
+        style={{
+          background: "#ffffff",
+          borderRadius: 16,
+          padding: "32px 36px",
+          width: "100%",
+          maxWidth: 440,
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          position: "relative",
+          zIndex: 1001,
+        }}
+      >
         {/* Step Indicators */}
         <div style={{ display: "flex", gap: 8, marginBottom: 28 }}>
           {[1, 2, 3].map(s => (
@@ -87,9 +113,9 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
 
         {/* Step 1 — Credentials */}
         {step === 1 && (
-          <form onSubmit={handleCredentialContinue}>
-            <div className="recoleta" style={{ fontSize: 28, marginBottom: 6 }}>Welcome 👋</div>
-            <p className="proxima" style={{ fontSize: 13, color: "#7a6f67", marginBottom: 20 }}>
+          <form onSubmit={handleCredentialContinue} style={{ display: "flex", flexDirection: "column" }}>
+            <div className="recoleta" style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", marginBottom: 6 }}>Welcome 👋</div>
+            <p className="proxima" style={{ fontSize: 13, color: "#64748b", marginBottom: 20 }}>
               Sign in with your student credentials or authorized GitHub identity.
             </p>
 
@@ -106,32 +132,50 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
               <span>🐱</span> Continue with GitHub
             </button>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0", color: "#9a8f87" }}>
-              <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.1)" }} />
-              <span className="proxima" style={{ fontSize: 11 }}>OR EMAIL</span>
-              <div style={{ flex: 1, height: 1, background: "rgba(0,0,0,0.1)" }} />
+            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0", color: "#94a3b8" }}>
+              <div style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
+              <span className="proxima" style={{ fontSize: 11, fontWeight: 600 }}>OR EMAIL</span>
+              <div style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
             </div>
 
-            <input
-              className="input"
-              type="email"
-              placeholder="Student email (e.g. student@university.edu)"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              style={{ marginBottom: 12 }}
-            />
-            <input
-              className="input"
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              style={{ marginBottom: 20 }}
-            />
+            <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 20 }}>
+              <input
+                type="email"
+                placeholder="Student email (e.g. student@university.edu)"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                style={{
+                  width: "100%",
+                  display: "block",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #cbd5e1",
+                  fontSize: 14,
+                  outline: "none",
+                }}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                style={{
+                  width: "100%",
+                  display: "block",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
+                  borderRadius: 8,
+                  border: "1px solid #cbd5e1",
+                  fontSize: 14,
+                  outline: "none",
+                }}
+              />
+            </div>
             <button
               type="submit"
               className="mint-btn"
-              style={{ width: "100%", padding: "12px", fontSize: 14 }}
+              style={{ width: "100%", padding: "12px", fontSize: 14, fontWeight: 700 }}
             >
               Sign In →
             </button>
