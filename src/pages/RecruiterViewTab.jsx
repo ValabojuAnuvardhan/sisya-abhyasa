@@ -5,7 +5,7 @@ export default function RecruiterViewTab({ setActiveTab, studentStats }) {
   const [selectedEvidence, setSelectedEvidence] = useState(null);
 
   const name = studentStats?.name || "Student Builder Portfolio";
-  const username = studentStats?.githubUsername || "student-portfolio";
+  const username = studentStats?.githubUsername || "";
   const targetRole = studentStats?.targetCareer || "Full Stack Software Engineer";
 
   const [profile] = useState({
