@@ -4,58 +4,9 @@ export default function GitHubEvidenceTab({ studentStats }) {
   const [activeTab, setActiveTab] = useState("timeline");
   const [synced, setSynced] = useState(false);
   const [selectedPR, setSelectedPR] = useState(null);
-  const [connectInput, setConnectInput] = useState("");
-  const [userGithub, setUserGithub] = useState(() => studentStats?.githubUsername || "");
 
+  const username = studentStats?.githubUsername || "student-dev";
   const studentName = studentStats?.name || "Student Builder";
-
-  const handleConnectGithub = (e) => {
-    if (e) e.preventDefault();
-    const handle = connectInput.trim().replace(/^@/, "");
-    if (!handle) return;
-    setUserGithub(handle);
-    if (studentStats) {
-      studentStats.githubUsername = handle;
-      try {
-        localStorage.setItem("sisya_user_session", JSON.stringify(studentStats));
-      } catch (err) {
-        console.warn(err);
-      }
-    }
-  };
-
-  if (!userGithub) {
-    return (
-      <div style={{ maxWidth: 640, margin: "40px auto", background: "#ffffff", borderRadius: 16, padding: "48px 36px", border: "1px solid #e2e8f0", boxShadow: "0 10px 30px rgba(0,0,0,0.05)", textAlign: "center" }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🐱</div>
-        <h2 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 8 }}>No GitHub Account Connected</h2>
-        <p style={{ fontSize: 14, color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>
-          Hello <strong>{studentName}</strong>! You haven't connected your GitHub username yet. Connect your handle below to start capturing verified pull requests, code diffs, and HMAC webhook signatures.
-        </p>
-        <form onSubmit={handleConnectGithub} style={{ display: "flex", gap: 10, maxWidth: 400, margin: "0 auto" }}>
-          <input
-            type="text"
-            placeholder="e.g. rahul-sharma-dev"
-            value={connectInput}
-            onChange={(e) => setConnectInput(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "10px 14px",
-              borderRadius: 8,
-              border: "1px solid #cbd5e1",
-              fontSize: 14,
-              outline: "none",
-            }}
-          />
-          <button type="submit" className="mint-btn" style={{ padding: "10px 20px", fontSize: 13, fontWeight: 700 }}>
-            Connect Handle →
-          </button>
-        </form>
-      </div>
-    );
-  }
-
-  const username = userGithub;
 
   const pullRequests = [
     {

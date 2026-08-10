@@ -25,8 +25,6 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
   const [skillInput, setSkillInput] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
 
-  const [authError, setAuthError] = useState("");
-
   const toggleSkill = (skill) => {
     setSelectedSkills(prev =>
       prev.includes(skill) ? prev.filter(s => s !== skill) : [...prev, skill]
@@ -43,53 +41,30 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
 
   const handleCredentialContinue = (e) => {
     if (e) e.preventDefault();
-    setAuthError("");
-    if (!email.trim() || !email.includes("@")) {
-      setAuthError("Please enter a valid student email address (e.g. student@university.edu).");
-      return;
-    }
-    if (!password.trim() || password.trim().length < 6) {
-      setAuthError("Password must be at least 6 characters long.");
-      return;
-    }
-    if (!name.trim()) setName(email.split("@")[0] || "Student Builder");
-    setStep(2);
-  };
-
-  const handleGithubContinue = () => {
-    setAuthError("");
-    if (!name.trim()) setName("Student Builder");
     setStep(2);
   };
 
   const handleProfileContinue = () => {
-    if (!name.trim()) setName("Student Builder");
     if (!year) setYear("3rd Year");
     setStep(3);
   };
 
   const handleProfileComplete = () => {
-    const finalName = name.trim() || "Student Builder";
+    const rawName = name.trim();
+    const finalName = rawName || (email.includes("@") ? email.split("@")[0].replace(/[^a-zA-Z0-9]/g, " ") : "Student Builder");
     const finalYear = year || "3rd Year";
     const initials = getInitials(finalName);
-    const sessionData = {
+    setStudentStats({
       name: finalName,
       year: `${finalYear} · ${branch || "CS"}`,
       avatar: initials,
       targetCareer: targetCareer || "AI / ML Engineer",
-      commits: 0,
-      tasks: 0,
-      badge: "New Builder 🌱",
-      skills: selectedSkills,
-      githubUsername: githubUsername.trim().replace(/^@/, ""),
-      email: email.trim() || "student@university.edu",
-    };
-    try {
-      localStorage.setItem("sisya_user_session", JSON.stringify(sessionData));
-    } catch (err) {
-      console.warn("Could not save session to localStorage:", err);
-    }
-    setStudentStats(sessionData);
+      commits: 2,
+      tasks: 1,
+      badge: "Active Builder 🔥",
+      skills: selectedSkills.length > 0 ? selectedSkills : ["React", "Python"],
+      githubUsername: githubUsername.trim().replace(/^@/, "") || "student-dev",
+    });
     setLoggedIn(true);
     setLoginStep(false);
   };
@@ -143,21 +118,6 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
               Sign in with your student credentials or authorized GitHub identity.
             </p>
 
-            {authError && (
-              <div style={{
-                background: "#fef2f2",
-                color: "#991b1b",
-                border: "1px solid #fecaca",
-                borderRadius: 8,
-                padding: "10px 14px",
-                fontSize: 12,
-                fontWeight: 600,
-                marginBottom: 16,
-              }}>
-                ⚠️ {authError}
-              </div>
-            )}
-
             <button
               type="button"
               className="ghost-btn"
@@ -166,7 +126,7 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
                 borderColor: "#0f172a", color: "#0f172a", fontWeight: 700,
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 10
               }}
-              onClick={handleGithubContinue}
+              onClick={handleCredentialContinue}
             >
               <span>🐱</span> Continue with GitHub
             </button>

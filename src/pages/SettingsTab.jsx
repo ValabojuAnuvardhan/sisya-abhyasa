@@ -4,7 +4,7 @@ export default function SettingsTab({ studentStats }) {
   const [saved, setSaved] = useState(false);
   const [formData, setFormData] = useState({
     name: studentStats?.name || "Student Builder",
-    username: studentStats?.githubUsername || "",
+    username: studentStats?.githubUsername || "student-dev",
     email: studentStats?.email || "student@sisya-abhyasa.io",
     bio: `${studentStats?.targetCareer || "Full Stack Software Engineer"} | React, FastAPI & Cloud Systems`,
     githubRepo: studentStats?.githubUsername ? `https://github.com/${studentStats.githubUsername}` : "https://github.com/sisya-abhyasa",
