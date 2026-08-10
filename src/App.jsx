@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
@@ -22,7 +22,34 @@ const DEFAULT_STATS = {
 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTabState] = useState(() => {
+    if (typeof window !== "undefined" && window.location.hash) {
+      const hash = window.location.hash.replace("#", "");
+      if (["home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics"].includes(hash)) {
+        return hash;
+      }
+    }
+    return "home";
+  });
+
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    if (typeof window !== "undefined") {
+      window.location.hash = tab;
+    }
+  };
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "");
+      if (["home", "solutions", "projects", "progress", "skill_graph", "recruiter", "analytics"].includes(hash)) {
+        setActiveTabState(hash);
+      }
+    };
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
   const [selectedProblem, setSelectedProblem] = useState(null);
   const [roadmapLoading, setRoadmapLoading] = useState(false);
   const [roadmap, setRoadmap] = useState(null);
@@ -192,7 +219,7 @@ function App() {
           />
         )}
         {activeTab === "skill_graph" && <SkillGraphTab />}
-        {activeTab === "recruiter" && <RecruiterViewTab />}
+        {activeTab === "recruiter" && <RecruiterViewTab setActiveTab={setActiveTab} />}
         {activeTab === "analytics" && <TeamAnalyticsTab />}
       </main>
 
