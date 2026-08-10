@@ -22,7 +22,10 @@ export default function Sidebar({ activeTab, setActiveTab }) {
       width: 240,
       background: "#ffffff",
       borderRight: "1px solid #e2e8f0",
-      minHeight: "calc(100vh - 64px)",
+      position: "sticky",
+      top: 64,
+      height: "calc(100vh - 64px)",
+      overflowY: "auto",
       padding: "16px 12px",
       flexShrink: 0,
     }}>

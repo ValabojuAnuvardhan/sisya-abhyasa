@@ -128,7 +128,7 @@ function App() {
       <div style={{ display: "flex", flex: 1 }}>
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main style={{ flex: 1, padding: "24px 32px", overflowX: "hidden" }}>
+        <main style={{ flex: 1, minWidth: 0, padding: "24px 32px", overflowX: "hidden" }}>
           {(activeTab === "github" || activeTab === "overview") && <GitHubEvidenceTab />}
           {activeTab === "home" && <HomeTab setLoginStep={setLoginStep} setActiveTab={setActiveTab} />}
           {activeTab === "solutions" && <SolutionsTab generateRoadmap={generateRoadmap} />}
