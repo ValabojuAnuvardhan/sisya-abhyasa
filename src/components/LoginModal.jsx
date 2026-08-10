@@ -77,11 +77,11 @@ export default function LoginModal({ setLoginStep, setLoggedIn, setStudentStats 
       year: `${finalYear} · ${branch || "CS"}`,
       avatar: initials,
       targetCareer: targetCareer || "AI / ML Engineer",
-      commits: 2,
-      tasks: 1,
-      badge: "Active Builder 🔥",
-      skills: selectedSkills.length > 0 ? selectedSkills : ["React", "Python"],
-      githubUsername: githubUsername.trim().replace(/^@/, "") || "student-dev",
+      commits: 0,
+      tasks: 0,
+      badge: "New Builder 🌱",
+      skills: selectedSkills,
+      githubUsername: githubUsername.trim().replace(/^@/, ""),
       email: email.trim() || "student@university.edu",
     };
     try {

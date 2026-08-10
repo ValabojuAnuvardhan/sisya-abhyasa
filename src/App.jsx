@@ -19,10 +19,10 @@ const DEFAULT_STATS = {
   name: "Student Builder",
   year: "3rd Year · CS",
   avatar: "SB",
-  commits: 142,
-  tasks: 24,
-  skills: ["FastAPI", "Next.js", "PostgreSQL", "Git", "Docker"],
-  githubUsername: "student-dev",
+  commits: 0,
+  tasks: 0,
+  skills: [],
+  githubUsername: "",
 };
 
 function App() {
