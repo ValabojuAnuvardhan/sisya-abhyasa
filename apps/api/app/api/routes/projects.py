@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import or_, select
+from sqlalchemy import or_, select, func
 from sqlalchemy.orm import Session, selectinload
 from app.core.auth import AuthPrincipal, require_principal
 from app.db.session import get_db
@@ -17,7 +17,7 @@ class MemberAdd(BaseModel): email: EmailStr
 class TaskAssignment(BaseModel): assigned_user_id: UUID|None=None
 
 def current_user(principal,db):
-    u=db.scalar(select(User).where(User.auth_subject==principal.subject))
+    u = db.get(User, principal.user_id) if (hasattr(principal, 'user_id') and principal.user_id) else db.scalar(select(User).where(User.auth_subject==principal.subject))
     if not u: raise HTTPException(404,'User not found')
     return u
 
@@ -30,8 +30,13 @@ def accessible_project(project_id,user,db):
     return p
 
 def owner_project(project_id,user,db):
-    p=db.scalar(select(Project).where(Project.id==project_id,Project.creator_id==user.id))
-    if not p: raise HTTPException(404,'Project not found')
+    if isinstance(project_id, str):
+        project_id = UUID(project_id)
+    p=db.scalar(select(Project).where(Project.id==project_id))
+    if not p: raise HTTPException(404,f'Project not found: project_id={project_id}')
+    pm = membership(project_id, user.id, db)
+    if p.creator_id != user.id and (not pm or pm.role != 'owner'):
+        raise HTTPException(404,f'Project not found or user is not project owner: user_id={user.id}')
     return p
 
 @router.post('/projects/architect',response_model=ArchitectPlan)
@@ -60,13 +65,24 @@ def list_projects(principal:AuthPrincipal=Depends(require_principal),db:Session=
 
 @router.post('/projects/{project_id}/members',status_code=201)
 def add_member(project_id:UUID,payload:MemberAdd,principal:AuthPrincipal=Depends(require_principal),db:Session=Depends(get_db)):
-    owner=current_user(principal,db); owner_project(project_id,owner,db); target=db.scalar(select(User).where(User.email==str(payload.email).lower()))
+    owner=current_user(principal,db); p=owner_project(project_id,owner,db); target=db.scalar(select(User).where(User.email==str(payload.email).lower()))
     if not target: raise HTTPException(404,'Student account not found')
     if target.id==owner.id: raise HTTPException(400,'Project owner is already a member')
+    
+    # Check max 5 active members capacity rule
+    active_count = db.scalar(select(func.count()).select_from(ProjectMember).where(ProjectMember.project_id==project_id, ProjectMember.status=='active')) or 0
+    if active_count >= 5:
+        raise HTTPException(400, 'Maximum team capacity reached (maximum 5 members allowed per team project)')
+
     row=db.scalar(select(ProjectMember).where(ProjectMember.project_id==project_id,ProjectMember.user_id==target.id))
     if row:
         row.status='active'; row.role='contributor'; row.removed_at=None
     else: row=ProjectMember(project_id=project_id,user_id=target.id,role='contributor'); db.add(row)
+
+    # Set collaboration_mode to TEAM when active members >= 2
+    if active_count + 1 >= 2:
+        p.collaboration_mode = 'TEAM'
+
     db.commit(); db.refresh(row); return {'id':str(row.id),'user_id':str(target.id),'full_name':target.full_name or target.email,'email':target.email,'role':row.role,'status':row.status}
 
 @router.delete('/projects/{project_id}/members/{member_user_id}')

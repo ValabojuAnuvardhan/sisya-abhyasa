@@ -40,7 +40,7 @@ from app.github.repo_service import (
 router = APIRouter(prefix="/github", tags=["github-oauth"])
 
 def _get_user(principal: AuthPrincipal, db: Session) -> User:
-    user = db.scalar(select(User).where(User.auth_subject == principal.subject))
+    user = db.get(User, principal.user_id) if (hasattr(principal, 'user_id') and principal.user_id) else db.scalar(select(User).where(User.auth_subject == principal.subject))
     if not user:
         raise HTTPException(status_code=404, detail="User profile not found")
     return user
@@ -49,6 +49,7 @@ def _get_user(principal: AuthPrincipal, db: Session) -> User:
 # SPRINT 1 OAUTH ENDPOINTS
 # ============================================================================
 
+@router.get("/connect", response_model=GithubConnectResponse)
 @router.post("/connect", response_model=GithubConnectResponse)
 def connect_github(
     principal: AuthPrincipal = Depends(require_principal),

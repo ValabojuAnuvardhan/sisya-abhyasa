@@ -1,50 +1,38 @@
 'use client';
+
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, setAuthToken } from '../../lib/api';
-import { useAuth } from '../../lib/auth-context';
 import PageBack from '../../components/PageBack';
+import { loginStudent, registerStudent } from '../../lib/api';
+import { useAuth } from '../../lib/auth-context';
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [devToken, setDevToken] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
-  const { refetchUser } = useAuth();
+  const { saveAuthToken } = useAuth();
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setMessage('');
     setError('');
     setSubmitting(true);
     const f = new FormData(e.currentTarget);
+    const email = f.get('email') as string;
+    const password = f.get('password') as string;
+    const githubUrl = (f.get('github_url') as string) || 'https://github.com/student';
+
     try {
+      let res;
       if (mode === 'signup') {
-        const r = await api('/auth/signup', {
-          method: 'POST',
-          body: JSON.stringify({ email: f.get('email'), password: f.get('password'), full_name: f.get('full_name') })
-        });
-        setMessage(r.message || 'Account created successfully. Please verify your email.');
-        if (r.development_verification_token) {
-          setDevToken(r.development_verification_token);
-        }
+        res = await registerStudent(email, password, githubUrl);
       } else {
-        const res = await api('/auth/login', {
-          method: 'POST',
-          body: JSON.stringify({ email: f.get('email'), password: f.get('password') })
-        });
-        if (res.access_token) {
-          setAuthToken(res.access_token);
-        }
-        const userProfile = await refetchUser();
-        if (userProfile && !userProfile.onboarding_completed) {
-          router.push('/onboarding');
-        } else {
-          router.push('/dashboard');
-        }
+        res = await loginStudent(email, password);
       }
+      if (res?.token) {
+        saveAuthToken(res.token);
+      }
+      router.push('/dashboard');
     } catch (err: any) {
       setError(err instanceof Error ? err.message : 'Authentication failed');
     } finally {
@@ -52,86 +40,58 @@ export default function AuthPage() {
     }
   }
 
-  async function verify() {
-    setError('');
-    setMessage('');
-    try {
-      await api('/auth/verify-email', {
-        method: 'POST',
-        body: JSON.stringify({ token: devToken })
-      });
-      setMessage('Email verified successfully! You can sign in now.');
-      setMode('login');
-      setDevToken('');
-    } catch (err: any) {
-      setError(err instanceof Error ? err.message : 'Verification failed');
-    }
-  }
-
   return (
-    <main className="shell formPage" style={{ maxWidth: 560, marginTop: 40 }}>
+    <main className="shell formPage" style={{ maxWidth: 520, marginTop: 40 }}>
       <PageBack href="/" label="Back to Home" />
-      <section className="card">
-        <span className="tag">Student account</span>
-        <h1>{mode === 'login' ? 'Sign in' : 'Create your account'}</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 20 }}>
+      <section className="card" style={{ padding: 32, borderRadius: 18, background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
+        <span className="tag" style={{ background: 'rgba(0, 161, 155, 0.12)', color: 'var(--mint)', padding: '4px 12px', borderRadius: 20, fontWeight: 600, fontSize: 13 }}>
+          Student Account
+        </span>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--ink)', marginTop: 12, marginBottom: 8, fontFamily: 'Georgia, serif' }}>
+          {mode === 'login' ? 'Sign in to Śiṣya' : 'Create student account'}
+        </h1>
+        <p style={{ color: 'var(--muted)', marginBottom: 20, fontSize: 14, lineHeight: 1.5 }}>
           {mode === 'login'
-            ? 'Continue your project workspaces, tasks, and evidence portfolio.'
-            : 'Create a private student account. Your Proof-of-Work remains private until you publish it.'}
+            ? 'Access your workspace, live evidence graph, and verified skills.'
+            : 'Register your email and GitHub profile to start generating evidence.'}
         </p>
 
         {error && (
-          <div className="error-banner card" style={{ marginBottom: 16, borderLeft: '4px solid var(--danger)', padding: 12 }}>
-            <p style={{ color: 'var(--danger)', margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
-          </div>
-        )}
-
-        {message && (
-          <div className="notice" style={{ marginBottom: 16 }}>
-            <p style={{ margin: 0 }}>ℹ️ {message}</p>
+          <div className="error-banner card" style={{ marginBottom: 16, borderLeft: '4px solid #dc2626', padding: 12, background: 'rgba(220, 38, 38, 0.08)', color: '#991b1b', borderRadius: 8, fontSize: 14 }}>
+            <p style={{ margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
           </div>
         )}
 
         <form onSubmit={submit} style={{ display: 'grid', gap: 16 }}>
+          <label style={{ display: 'grid', gap: 6, fontWeight: 500, fontSize: 14, color: '#d1d5db' }}>
+            Email address
+            <input name="email" type="email" placeholder="student@example.com" required style={{ background: '#1f2937', border: '1px solid #374151', padding: '10px 14px', borderRadius: 8, color: '#fff', fontSize: 14 }} />
+          </label>
+          <label style={{ display: 'grid', gap: 6, fontWeight: 500, fontSize: 14, color: '#d1d5db' }}>
+            Password
+            <input name="password" type="password" placeholder="At least 6 characters" minLength={6} required style={{ background: '#1f2937', border: '1px solid #374151', padding: '10px 14px', borderRadius: 8, color: '#fff', fontSize: 14 }} />
+          </label>
           {mode === 'signup' && (
-            <label style={{ display: 'grid', gap: 6, fontWeight: 500 }}>
-              Full name
-              <input name="full_name" placeholder="e.g. Anuvardhan" required maxLength={120} />
+            <label style={{ display: 'grid', gap: 6, fontWeight: 500, fontSize: 14, color: '#d1d5db' }}>
+              GitHub Profile URL
+              <input name="github_url" type="text" placeholder="https://github.com/student" required style={{ background: '#1f2937', border: '1px solid #374151', padding: '10px 14px', borderRadius: 8, color: '#fff', fontSize: 14 }} />
             </label>
           )}
-          <label style={{ display: 'grid', gap: 6, fontWeight: 500 }}>
-            Email address
-            <input name="email" type="email" placeholder="student@example.com" required />
-          </label>
-          <label style={{ display: 'grid', gap: 6, fontWeight: 500 }}>
-            Password
-            <input name="password" type="password" placeholder="At least 10 characters" minLength={10} required />
-          </label>
-          <button className="btn primary" type="submit" disabled={submitting} style={{ marginTop: 8 }}>
+          <button className="btn primary" type="submit" disabled={submitting} style={{ marginTop: 8, background: '#34d399', color: '#064e3b', fontWeight: 600, padding: 12, borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 15 }}>
             {submitting ? 'Authenticating…' : mode === 'login' ? 'Sign in' : 'Create account'}
           </button>
         </form>
 
-        {devToken && (
-          <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border-subtle)' }}>
-            <button className="btn secondary" type="button" onClick={verify} style={{ width: '100%' }}>
-              ⚡ Auto-Verify Email (Development Mode)
-            </button>
-          </div>
-        )}
-
-        <div style={{ marginTop: 24, textAlign: 'center', borderTop: '1px solid var(--border-subtle)', paddingTop: 16 }}>
-          <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 8 }}>
+        <div style={{ marginTop: 24, textAlign: 'center', borderTop: '1px solid #1f2937', paddingTop: 16 }}>
+          <p style={{ fontSize: 14, color: '#9ca3af', marginBottom: 8 }}>
             {mode === 'login' ? "Don't have an account yet?" : 'Already registered?'}
           </p>
           <button
-            className="btn secondary"
             type="button"
+            style={{ background: 'transparent', border: 'none', color: '#60a5fa', fontWeight: 600, cursor: 'pointer', fontSize: 14 }}
             onClick={() => {
               setMode(mode === 'login' ? 'signup' : 'login');
-              setMessage('');
               setError('');
-              setDevToken('');
             }}
           >
             {mode === 'login' ? 'Create a new account' : 'Sign in to existing account'}

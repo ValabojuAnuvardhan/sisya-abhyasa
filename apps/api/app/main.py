@@ -15,6 +15,11 @@ from app.api.routes.mentor import router as mentor_router
 from app.api.routes.recruiter import router as recruiter_router
 from app.api.routes.analytics import router as analytics_router
 from app.api.routes.evaluation import router as evaluation_router
+from app.api.routes.learn import router as learn_router
+from app.api.routes.network import router as network_router
+from app.api.routes.execution import router as execution_router
+from app.api.routes.settings import router as settings_router
+from app.api.routes.career import router as career_router
 from app.github.task_traceability.routes import router as task_traceability_router
 from app.github.evidence_graph.routes import router as evidence_graph_router
 from app.core.config import settings
@@ -24,17 +29,27 @@ origins = [settings.frontend_origin, "http://localhost:3000", "http://127.0.0.1:
 app.add_middleware(CORSMiddleware, allow_origins=list(set(origins)), allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.include_router(health_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
+app.include_router(auth_router)
+app.include_router(learn_router, prefix="/api/v1")
+app.include_router(learn_router)
+app.include_router(network_router, prefix="/api/v1")
+app.include_router(network_router)
 app.include_router(me_router, prefix="/api/v1")
 app.include_router(skills_router, prefix="/api/v1")
+app.include_router(career_router, prefix="/api/v1")
 app.include_router(project_discovery_router, prefix="/api/v1")
 app.include_router(projects_router, prefix="/api/v1")
+app.include_router(execution_router, prefix="/api/v1")
+app.include_router(settings_router, prefix="/api/v1")
 app.include_router(github_router, prefix="/api/v1")
 app.include_router(github_oauth_router, prefix="/api/v1")
 app.include_router(task_traceability_router, prefix="/api/v1")
 app.include_router(evidence_graph_router, prefix="/api/v1")
 app.include_router(proof_router, prefix="/api/v1")
+app.include_router(proof_router)
 app.include_router(team_space_router, prefix="/api/v1")
 app.include_router(community_router, prefix="/api/v1")
+app.include_router(community_router)
 app.include_router(mentor_router, prefix="/api/v1")
 app.include_router(recruiter_router, prefix="/api/v1")
 app.include_router(analytics_router, prefix="/api/v1")

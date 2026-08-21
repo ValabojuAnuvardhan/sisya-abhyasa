@@ -7,6 +7,11 @@ export type UserProfile = {
   id: string;
   email: string;
   full_name: string | null;
+  headline?: string | null;
+  bio?: string | null;
+  location?: string | null;
+  avatar_url?: string | null;
+  github_username?: string | null;
   education_year: string | null;
   target_role: string | null;
   experience_level: string | null;

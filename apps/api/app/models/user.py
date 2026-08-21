@@ -29,6 +29,10 @@ class User(Base):
 class StudentProfile(Base):
     __tablename__ = "student_profiles"
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    headline: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    bio: Mapped[str | None] = mapped_column(String(1000), nullable=True)
+    location: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     education_year: Mapped[str | None] = mapped_column(String(40), nullable=True)
     target_role: Mapped[str | None] = mapped_column(String(120), nullable=True)
     experience_level: Mapped[str | None] = mapped_column(String(30), nullable=True)

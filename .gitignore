@@ -66,6 +66,8 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+# TypeScript build cache
+*.tsbuildinfo
 
 # Platform Deployments
 .vercel/

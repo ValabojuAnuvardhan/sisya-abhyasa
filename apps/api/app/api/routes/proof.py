@@ -62,3 +62,99 @@ def public_proof(slug:str,db:Session=Depends(get_db)):
     profile=db.scalar(select(StudentProfile).where(StudentProfile.public_slug==slug,StudentProfile.profile_public==True))
     if not profile: raise HTTPException(404,'Proof-of-Work profile not found')
     user=db.get(User,profile.user_id); return _safe_projection(user,db)
+
+def _pow_response(user: User, db: Session):
+    profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == user.id))
+    member_project_ids = select(ProjectMember.project_id).where(ProjectMember.user_id == user.id, ProjectMember.status == 'active')
+    projects = db.scalars(select(Project).where(or_(Project.creator_id == user.id, Project.id.in_(member_project_ids))).order_by(Project.updated_at.desc())).all()
+    
+    projects_list = []
+    merged_prs_list = []
+    skills_list = []
+    
+    for project in projects:
+        projects_list.append({
+            "id": str(project.id),
+            "title": project.title,
+            "description": project.description,
+            "tech_stack": project.tech_stack.split(",") if hasattr(project, "tech_stack") and project.tech_stack else [],
+            "role": "owner" if project.creator_id == user.id else "member"
+        })
+        repo = db.scalar(select(ProjectRepository).where(ProjectRepository.project_id == project.id))
+        if repo:
+            prs = db.scalars(select(GithubPullRequest).where(GithubPullRequest.repository_id == repo.id, GithubPullRequest.user_id == user.id, GithubPullRequest.merged == True)).all()
+            for pr in prs:
+                merged_prs_list.append({
+                    "id": str(pr.id),
+                    "pr_number": pr.number,
+                    "title": pr.title,
+                    "repository_name": repo.repo_name,
+                    "merged_at": pr.merged_at.isoformat() if hasattr(pr, "merged_at") and pr.merged_at else None
+                })
+                skills = db.scalars(select(SkillEvidence).where(SkillEvidence.user_id == user.id, SkillEvidence.project_id == project.id, SkillEvidence.pull_request_id == pr.id)).all()
+                for s in skills:
+                    skills_list.append({
+                        "skill": s.skill_name,
+                        "confidence": getattr(s, "confidence_score", 0.85),
+                        "evidence": [{"type": "pr", "advisory": True, "evidence_link": None}]
+                    })
+                    
+    # Include public learning posts if profile is public and learning post display is permitted
+    learning_posts = []
+    public_learning_allowed = getattr(profile, "public_learning_visible", True) if profile else True
+    if profile and profile.profile_public and public_learning_allowed:
+        from app.models.network import NetworkPost
+        post_rows = db.scalars(
+            select(NetworkPost)
+            .where(
+                NetworkPost.user_id == user.id,
+                NetworkPost.post_type == "LEARNING",
+                NetworkPost.visibility == "PUBLIC"
+            )
+            .order_by(NetworkPost.created_at.desc())
+        ).all()
+        learning_posts = [
+            {
+                "id": str(p.id),
+                "content": p.content,
+                "skill_topic": p.skill_topic,
+                "created_at": p.created_at.isoformat()
+            }
+            for p in post_rows
+        ]
+
+    return {
+        "student_id": str(user.id),
+        "full_name": user.full_name,
+        "headline": getattr(profile, "headline", None) if profile else None,
+        "bio": getattr(profile, "bio", None) if profile else None,
+        "location": getattr(profile, "location", None) if profile else None,
+        "avatar_url": getattr(profile, "avatar_url", None) if profile else None,
+        "github_username": profile.github_username if profile else None,
+        "target_role": profile.target_role if profile else None,
+        "projects": projects_list,
+        "projects_count": len(projects_list),
+        "merged_prs": merged_prs_list,
+        "merged_prs_count": len(merged_prs_list),
+        "skills": skills_list,
+        "learning_posts": learning_posts
+    }
+
+@router.get('/evidence/profile/{user_id}/proof-of-work')
+def get_user_pow(user_id: UUID, db: Session = Depends(get_db)):
+    user = db.get(User, user_id)
+    if not user: raise HTTPException(404, 'User not found')
+    profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == user.id))
+    if profile and not profile.profile_public:
+        raise HTTPException(403, 'Private Profile — This student profile is private.')
+    return _pow_response(user, db)
+
+@router.get('/evidence/profile/{user_id}/skills')
+def get_user_skills(user_id: UUID, db: Session = Depends(get_db)):
+    user = db.get(User, user_id)
+    if not user: raise HTTPException(404, 'User not found')
+    profile = db.scalar(select(StudentProfile).where(StudentProfile.user_id == user.id))
+    if profile and not profile.profile_public:
+        raise HTTPException(403, 'Private Profile — This student profile is private.')
+    return _pow_response(user, db).get("skills", [])
+

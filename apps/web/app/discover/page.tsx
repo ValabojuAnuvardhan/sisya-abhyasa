@@ -42,24 +42,26 @@ export default function Discover() {
   async function generate() {
     setLoading(true);
     setError('');
+    const payload = {
+      interests,
+      desired_skills: desired.split(',').map((x) => x.trim()).filter(Boolean),
+      preferred_difficulty: difficulty || null,
+      time_commitment: time,
+    };
+
     try {
-      setResult(
-        await api('/project-ideas/recommend', {
-          method: 'POST',
-          body: JSON.stringify({
-            interests,
-            desired_skills: desired.split(',').map((x) => x.trim()).filter(Boolean),
-            preferred_difficulty: difficulty || null,
-            time_commitment: time,
-          }),
-        })
-      );
+      const res = await api('/projects/recommend', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      setResult(res);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not generate project recommendations');
+      setError(e instanceof Error ? e.message : 'Could not generate project recommendations. Please verify backend connection.');
     } finally {
       setLoading(false);
     }
   }
+
 
   return (
     <main className="shell formPage">

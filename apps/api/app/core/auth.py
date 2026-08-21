@@ -23,9 +23,11 @@ async def require_principal(
     sisya_session: str | None = Cookie(default=None, alias=settings.session_cookie_name),
     db: Session = Depends(get_db),
 ) -> AuthPrincipal:
-    token = sisya_session
-    if not token and authorization and authorization.lower().startswith("bearer "):
+    token = None
+    if authorization and authorization.lower().startswith("bearer "):
         token = authorization[7:].strip()
+    if not token:
+        token = sisya_session
 
     if token:
         session = db.scalar(select(AuthSession).where(AuthSession.token_hash == _hash_token(token)))
@@ -43,3 +45,21 @@ async def require_principal(
             return AuthPrincipal(subject=x_dev_auth_subject, email=x_dev_auth_email)
 
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required")
+
+async def optional_principal(
+    authorization: str | None = Header(default=None),
+    x_dev_auth_subject: str | None = Header(default=None),
+    x_dev_auth_email: str | None = Header(default=None),
+    sisya_session: str | None = Cookie(default=None, alias=settings.session_cookie_name),
+    db: Session = Depends(get_db),
+) -> AuthPrincipal | None:
+    try:
+        return await require_principal(
+            authorization=authorization,
+            x_dev_auth_subject=x_dev_auth_subject,
+            x_dev_auth_email=x_dev_auth_email,
+            sisya_session=sisya_session,
+            db=db,
+        )
+    except HTTPException:
+        return None

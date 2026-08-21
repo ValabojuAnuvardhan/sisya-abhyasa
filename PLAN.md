@@ -1,123 +1,96 @@
-# Śiṣya Abhyāsa — Learning Operating System Architecture & Sprint 5 Plan
+# Śiṣya Abhyāsa — Complete Product Architecture & Functionality Blueprint
 
-Build the **Learning Activity & Evidence Foundation** for Śiṣya Abhyāsa as the foundational layer of the Learning Operating System.
-
-> [!IMPORTANT]
-> **Core Architectural Hierarchy**:
-> ```
-> Learning Activity ➔ Artifact ➔ Evidence ➔ Verification ➔ Capability ➔ Projection ➔ AI Intelligence
-> ```
-> 1. **Learning Activity**: What happened (Task completed, PR created, Code review given, Quiz passed, AI session completed).
-> 2. **Artifact**: Raw output (`CanonicalArtifact` via `GithubAdapter`, `TaskAdapter`, `MentorAdapter`).
-> 3. **Evidence**: Curated, deduplicated (`IdentityService`), and linked (`RelationshipBuilder`) proof.
-> 4. **Verification**: Workflow credibility engine (Sprint 6).
-> 5. **Capability**: Proven capabilities (`SkillEngine`, `TrustEngine`, Leadership, Architecture) (Sprint 7).
-> 6. **Projection**: Audience-specific read models (`StudentProjection`, `RecruiterProjection`) (Sprint 8).
-> 7. **AI Intelligence**: Reasoning layer (`AIMentor`, `LivingResume`, `AIRecruiterAssistant`) (Sprint 9).
+The locked-in architecture for **Śiṣya Abhyāsa**, combining the 5 platform layers, 3 dedicated AI agent personas, the Evidence Engine, Public Proof-of-Work Profiles, the Network Hub with the 🔨 **Rebuild** flywheel, and Career matching.
 
 ---
 
-## The 5 Decoupled Platform Domains
+## 1. Central Product Flywheel
 
 ```
-1. LEARNING DOMAIN     ➔ Projects, Tasks, Milestones, Learning Activities, Teams
-2. EVIDENCE DOMAIN     ➔ Provider Registry, Artifact Store, Evidence Store, Pipeline, Event Bus
-3. CAPABILITY DOMAIN   ➔ Skill Engine, Experience Engine, Trust Engine, Capability Graph
-4. PROJECTION DOMAIN   ➔ Projection Worker, Student View, Recruiter Platform
-5. INTELLIGENCE DOMAIN ➔ AI Mentor, Living Resume ("Ask AI"), AI Recruiter Assistant
+Learn ➔ Build ➔ Prove ➔ Share ➔ Collaborate ➔ Rebuild ➔ Learn again
+```
+
+```
+                     ┌───────────────┐
+                     │    LEARN      │
+                     │  🧠 ŚiṣyaChat │
+                     └───────┬───────┘
+                             │
+                             ▼
+                     ┌───────────────┐
+                     │     BUILD     │
+                     │ ⚒️ AbhyāsBot  │
+                     └───────┬───────┘
+                             │
+                             ▼
+                     ┌───────────────┐
+                     │     PROVE     │
+                     │ 🧪 Evidence   │
+                     └───────┬───────┘
+                             │
+                             ▼
+                     ┌───────────────┐
+                     │     SHARE     │
+                     │ 🌐 Network    │
+                     └───────┬───────┘
+                             │
+                             ▼
+                     ┌───────────────┐
+                     │ COLLABORATE   │
+                     │ Teams/People  │
+                     └───────┬───────┘
+                             │
+                             ▼
+                     ┌───────────────┐
+                     │    REBUILD    │
+                     │   🔨 Remix     │
+                     └───────┬───────┘
+                             │
+                             ▼
+                         NEW BUILD
+                             │
+                             └───────────────↺
 ```
 
 ---
 
-## Sprint 5 Scope — Learning Activity & Evidence Foundation
+## 2. Five Core Product Layers
 
-```
-apps/api/app/github/evidence_graph/
-├── __init__.py
-├── registry.py        # ProviderRegistry (provider, version, capabilities, adapter)
-├── canonical.py       # CanonicalArtifact Data Standard
-├── adapter.py         # BaseSourceAdapter, GithubAdapter (v1), LearningActivityAdapter (v1)
-├── identity.py        # IdentityService & HashStrategy (Deduplication)
-├── context.py         # ProcessingContext (request_id, project_id, student_id, trace_id)
-├── pipeline.py        # Multi-Stage ProcessingPipeline (Normalize -> Validate -> Enrich -> Deduplicate -> Persist -> Relate -> Promote -> Emit)
-├── rules.py           # Priority-Based RelationshipRule plugins (GithubRule, TaskRule, MentorRule)
-├── builder.py         # RelationshipBuilder Engine
-├── events.py          # Domain Event Bus & Immutable Event Store
-├── projections.py     # CQRS ProjectionWorker, Read Repositories, Read Models
-├── commands.py        # Write Commands (CollectArtifactsCommand, CreateRelationshipCommand, etc.)
-├── queries.py         # Read Queries (GetTaskEvidenceQuery, GetProjectEvidenceQuery)
-├── service.py         # EvidencePlatformService Orchestrator
-├── validators.py      # Security & Isolation Validators
-├── models.py          # LearningActivityRecord, ArtifactRecord, EvidenceRecord, EvidenceLink, EvidenceEvent Database Tables
-├── schemas.py         # Infrastructure Pydantic DTOs
-└── routes.py          # Infrastructure REST API Endpoints
-```
+1. **LEARNING LAYER**: Dashboard, Career / Skill Diagnosis, Roadmap, Skill Gaps, Recommended Resources, ŚiṣyaChat.
+2. **BUILDING LAYER**: Project Hub, My Projects, Discover, AI Project Architect, Project Workspace (Overview, Architecture, Milestones, Kanban, Team, GitHub, Activity, Evidence), AbhyāsBot.
+3. **EVIDENCE LAYER**: GitHub Webhooks, Commits, PRs, TaskStatusHistory, AI PR Review Agent, Skill Evidence, Evidence Dashboard.
+4. **PROFESSIONAL LAYER**: Profile (`/profile`), Public Proof-of-Work Profile (`/p/[userId]`), Śiṣya Abhyāsa Network Hub (`/network`, Feed, Work Posts, Likes, Comments, Shares, 🔨 Rebuild).
+5. **CAREER LAYER**: Jobs (`/jobs`), Matching, Applications, Future Interview Studio (Project-based questions).
 
 ---
 
-## Proposed Component Breakdown for Sprint 5
+## 3. The 3 Dedicated AI Personas
 
-### 1. Learning Activity Foundation (`models.py`, `adapter.py`)
-- `LearningActivityRecord`: Core activity entity (`id`, `project_id`, `student_id`, `activity_type`, `source_provider`, `activity_data_json`, `timestamp`).
-- `LearningActivityAdapter`: Converts internal Śiṣya actions (`task_created`, `task_completed`, `quiz_passed`, `mentor_review`) into `CanonicalArtifact` objects.
-
-### 2. Provider Registry & Canonical Standard (`registry.py`, `canonical.py`)
-- `ProviderCapabilities`: Capability contracts (`supports_webhooks`, `supports_reviews`, `supports_prs`, `supports_branches`, `supports_commits`, `supports_deployments`, `supports_ci`, `supports_files`).
-- `ProviderRegistry`: Registry mapping provider keys and version strings (e.g. `("github", "v1")`, `("sisya", "v1")`, `("gitlab", "v1")`) to capabilities and adapters.
-- `CanonicalArtifact`: Raw artifact schema (`schema_version`, `provider`, `version`, `artifact_type`, `provider_entity_id`, `actor`, `timestamp`, `payload`, `metadata`).
-
-### 3. Identity Service & Dual Storage (`identity.py`, `models.py`)
-- `HashStrategy`: Deterministic SHA-256 hash generator.
-- `ArtifactStore` (`artifact_records`): Raw artifact store for future AI reprocessing.
-- `EvidenceStore` (`evidence_records`): Promoted evidence store.
-
-### 4. Processing Pipeline (`pipeline.py`)
-- `ProcessingPipeline`: 8 isolated stages receiving `ProcessingContext`:
-  1. `NormalizeStage`
-  2. `ValidateStage`
-  3. `EnrichStage`
-  4. `DeduplicateStage`
-  5. `PersistArtifactStage`
-  6. `RelationshipStage`
-  7. `PromoteToEvidenceStage`
-  8. `EmitEventStage`
-
-### 5. Priority-Based Relationship Builder (`rules.py`, `builder.py`)
-- `RelationshipRule`: Declares `priority: int`, `supports()`, `build()`.
-- `GithubRule` (Priority 10), `TaskRule` (Priority 20), `MentorRule` (Priority 30).
-
-### 6. Event Bus & CQRS Projections (`events.py`, `commands.py`, `queries.py`, `projections.py`)
-- `EventBus`: Decoupled event bus emitting immutable `EvidenceEvent`s.
-- `ProjectionWorker`: Listens to events and updates read models (`TaskProjection`, `ProjectProjection`).
-- Write Commands & Handlers (`CollectArtifactsCommand`, `CreateRelationshipCommand`, `VerifyEvidenceCommand`, `RejectEvidenceCommand`).
-- Read Queries & Repositories (`GetTaskEvidenceQuery`, `GetProjectEvidenceQuery`).
+| AI Persona | Layer | Primary Responsibility | Context & Boundaries |
+| :--- | :--- | :--- | :--- |
+| **🧠 ŚiṣyaChat** | 📚 Learn | Teach concepts, diagnose skill gaps, quiz students, recommend learning resources | Reads student profile & roadmap. Does NOT assist with active code building tasks. |
+| **⚒️ AbhyāsBot** | 🚀 Build | Guide implementation, break down task steps, debug errors, verify task criteria | Contextually bound to active `task_id`, `project_id`, criteria, and tech stack. |
+| **🧪 PR Review Agent** | 🧪 Evidence | Review merged PR metadata, extract skill signals, generate advisory evidence | Token-efficient review of PR title, diff summary, commit logs, and task context. |
 
 ---
 
-## Infrastructure REST API (`routes.py`)
+## 4. Navigation Architecture
 
-Mounted under `/api/v1/evidence-graph`:
-- `POST /api/v1/evidence-graph/collect/{project_id}` ➔ Executes `CollectArtifactsCommand` pipeline.
-- `GET /api/v1/evidence-graph/task/{task_id}` ➔ Executes `GetTaskEvidenceQuery` via `TaskProjectionRepository`.
-- `GET /api/v1/evidence-graph/project/{project_id}` ➔ Executes `GetProjectEvidenceQuery` via `ProjectProjectionRepository`.
-- `POST /api/v1/evidence-graph/relationship` ➔ Executes `CreateRelationshipCommand`.
-- `POST /api/v1/evidence-graph/record/{evidence_id}/verify` ➔ Executes `VerifyEvidenceCommand`.
-- `POST /api/v1/evidence-graph/record/{evidence_id}/reject` ➔ Executes `RejectEvidenceCommand`.
+Header: `Home | 📚 Learn | 🚀 Build | 🌐 Network | 🧪 Evidence | 💼 Jobs | 💬 🔔 👤 Me`
+
+- **Learn**: `/learn`, `/learn/chat`, `/learn/roadmap`, `/learn/skills`
+- **Build**: `/projects`, `/projects/new`, `/projects/discover`, `/projects/[id]`, `/projects/[id]/team`
+- **Evidence**: `/evidence`, `/evidence/reviews`, `/p/[userId]`
+- **Network**: `/network`, `/network/people`, `/network/projects`, `/network/communities`, `/network/posts`
+- **Profile**: `/profile`, `/profile/edit`, `/p/[userId]`
+- **Career**: `/jobs`, `/jobs/[id]`, `/applications`, `/interview`
 
 ---
 
-## Verification & Quality Strategy (`apps/api/tests/test_evidence_graph.py`)
+## 5. Verification & Implementation Roadmap
 
-1. **Learning Activity & Adapter Tests**:
-   - Ingestion of internal `LearningActivityRecord` and transformation into `CanonicalArtifact`.
-   - `ProviderRegistry` versioning and capabilities check.
-2. **Pipeline & Dual Store Tests**:
-   - 8-stage `ProcessingPipeline` execution with `ProcessingContext`.
-   - `ArtifactStore` raw persistence & `EvidenceStore` promotion.
-3. **CQRS & Event Bus Tests**:
-   - Priority-based `RelationshipBuilder` execution.
-   - `EventBus` publish/subscribe and `ProjectionWorker` read repository updates.
-4. **Regression Gate**:
-   - `python -m pytest tests/` (100% PASS).
-   - `npm run lint` (0 warnings / 0 errors).
-   - `npx next build` (Successful compilation).
+- **Task 1**: Update Database Models (`TaskStatusHistory`, `WorkPost`, `PostLike`, `PostComment`, `PostShare`, `PostRebuild`, `UserConnection`, `Community`).
+- **Task 2**: Implement AI Agent Personas (`SisyachatService`, `AbhyasbotService`, `AiArchitectService`, `PrReviewAgent`).
+- **Task 3**: Build REST API endpoints for `/api/v1/learn`, `/api/v1/network`, and 🔨 `/api/v1/network/rebuild/{post_id}`.
+- **Task 4**: Create Next.js Frontend views (`/learn`, `/network`, `/projects/[id]`, `/p/[userId]`, `/jobs`).
+- **Task 5**: Automated Pytest execution & Next.js build validation.

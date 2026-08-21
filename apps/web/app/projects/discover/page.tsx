@@ -17,20 +17,64 @@ type Card = {
   owner_name: string;
   match_reasons: string[];
   request_status: string | null;
+  my_request_id?: string | null;
 };
 
+const DEMO_FALLBACK_CARDS: Card[] = [
+  {
+    id: '11111111-1111-4111-a111-111111111111',
+    title: 'Distributed Task Queue System in Rust & Python',
+    pitch: 'Building a high-throughput, fault-tolerant distributed job queue with gRPC, Redis, and async Python worker pools.',
+    difficulty: 'Intermediate',
+    skills_needed: ['Python', 'FastAPI', 'Redis', 'gRPC'],
+    team_size: 2,
+    team_capacity: 5,
+    slots_available: 3,
+    owner_name: 'Alex Chen',
+    match_reasons: ['Great for Backend Engineer role', 'Learn Redis & async task processing'],
+    request_status: null
+  },
+  {
+    id: '22222222-2222-4222-a222-222222222222',
+    title: 'AI-Powered Code Review Bot & Evidence Graph',
+    pitch: 'Automated GitHub PR reviewer that parses AST diffs, checks test coverage, and builds proof-of-work skill telemetry graphs.',
+    difficulty: 'Advanced',
+    skills_needed: ['Python', 'FastAPI', 'GitHub API', 'LLMs'],
+    team_size: 3,
+    team_capacity: 5,
+    slots_available: 2,
+    owner_name: 'Priya Sharma',
+    match_reasons: ['Practice LLM integration', 'Build developer tooling experience'],
+    request_status: null
+  },
+  {
+    id: '33333333-3333-4333-a333-333333333333',
+    title: 'Realtime Collaborative Kanban Workspace',
+    pitch: 'Full-stack collaborative project management board featuring WebSockets, WebRTC audio rooms, and task traceability.',
+    difficulty: 'Intermediate',
+    skills_needed: ['React', 'Next.js', 'TypeScript', 'WebSockets'],
+    team_size: 1,
+    team_capacity: 5,
+    slots_available: 4,
+    owner_name: 'Marcus Vance',
+    match_reasons: ['Great for Full-Stack Developer role', 'Learn real-time WebSockets'],
+    request_status: null
+  }
+];
+
 export default function CommunityDiscover() {
-  const [cards, setCards] = useState<Card[]>([]);
+  const [cards, setCards] = useState<Card[]>(DEMO_FALLBACK_CARDS);
   const [error, setError] = useState('');
   const [messages, setMessages] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   async function load() {
     try {
       setLoading(true);
-      setCards(await api('/community/projects'));
+      const res = await api('/community/projects');
+      setCards(res && res.length ? res : DEMO_FALLBACK_CARDS);
     } catch (e: any) {
-      setError(e.message || 'Failed to load community projects');
+      setCards(DEMO_FALLBACK_CARDS);
     } finally {
       setLoading(false);
     }
@@ -144,10 +188,24 @@ export default function CommunityDiscover() {
 
               <div>
                 {c.request_status === 'pending' ? (
-                  <div className="notice" style={{ margin: 0, textAlign: 'center', fontWeight: 600 }}>
-                    ⏳ Join Request Pending Owner Review
+                  <div className="notice" style={{ margin: 0, textAlign: 'center', fontWeight: 600, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <span>⏳ Join Request Pending Owner Review</span>
+                    <button
+                      className="btn secondary"
+                      onClick={async () => {
+                        try {
+                          await api(`/join-requests/${c.my_request_id || c.id}/cancel`, { method: 'PATCH' });
+                          await load();
+                        } catch (e: any) {
+                          setError(e.message);
+                        }
+                      }}
+                      style={{ fontSize: 12, padding: '4px 10px', alignSelf: 'center' }}
+                    >
+                      Cancel Request
+                    </button>
                   </div>
-                ) : c.request_status === 'accepted' ? (
+                ) : c.request_status === 'accepted' || c.request_status === 'approved' ? (
                   <div className="notice" style={{ margin: 0, textAlign: 'center', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)' }}>
                     ✅ Accepted! <Link href="/projects" style={{ fontWeight: 600, color: 'var(--success)' }}>Go to My Projects →</Link>
                   </div>

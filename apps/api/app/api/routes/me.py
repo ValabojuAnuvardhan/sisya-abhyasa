@@ -20,9 +20,23 @@ def _load_user(db: Session, user_id):
 
 def _read(user: User) -> MeRead:
     p = user.profile or StudentProfile()
-    return MeRead(id=user.id,email=user.email,full_name=user.full_name,education_year=p.education_year,target_role=p.target_role,
-        experience_level=p.experience_level,interests=p.interests,profile_public=p.profile_public,
-        onboarding_completed=p.onboarding_completed,skills=[SkillRead.model_validate(s) for s in user.skills])
+    return MeRead(
+        id=user.id,
+        email=user.email,
+        full_name=user.full_name,
+        headline=getattr(p, "headline", None),
+        bio=getattr(p, "bio", None),
+        location=getattr(p, "location", None),
+        avatar_url=getattr(p, "avatar_url", None),
+        education_year=p.education_year,
+        target_role=p.target_role,
+        experience_level=p.experience_level,
+        interests=p.interests,
+        github_username=getattr(p, "github_username", None),
+        profile_public=p.profile_public,
+        onboarding_completed=p.onboarding_completed,
+        skills=[SkillRead.model_validate(s) for s in user.skills]
+    )
 
 @router.get("/me", response_model=MeRead)
 def get_me(principal: AuthPrincipal=Depends(require_principal), db: Session=Depends(get_db)):
@@ -33,12 +47,21 @@ def patch_me(payload: ProfileUpdate, principal: AuthPrincipal=Depends(require_pr
     user=_get_or_create_user(db,principal); user=_load_user(db,user.id)
     if payload.full_name is not None: user.full_name=payload.full_name.strip() or None
     p=user.profile
-    for field in ("education_year","target_role","experience_level","interests"):
+    if p is None:
+        p = StudentProfile(user_id=user.id)
+        db.add(p)
+        user.profile = p
+    for field in ("headline", "bio", "location", "avatar_url", "education_year", "target_role", "experience_level", "interests", "github_username"):
         value=getattr(payload,field)
         if value is not None: setattr(p,field,value.strip() or None)
-    if payload.onboarding_completed is not None: p.onboarding_completed=payload.onboarding_completed
-    if payload.skill_slugs:
+    if payload.profile_public is not None:
+        p.profile_public = payload.profile_public
+    if payload.onboarding_completed is not None:
+        p.onboarding_completed = payload.onboarding_completed
+    if payload.skill_slugs is not None:
         slugs=sorted(set(x.strip().lower() for x in payload.skill_slugs if x.strip()))
-        user.skills=list(db.scalars(select(Skill).where(Skill.slug.in_(slugs))).all())
-    else: user.skills=[]
+        if slugs:
+            user.skills=list(db.scalars(select(Skill).where(Skill.slug.in_(slugs))).all())
+        else:
+            user.skills=[]
     db.commit(); return _read(_load_user(db,user.id))

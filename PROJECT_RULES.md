@@ -22,6 +22,16 @@
 - Audit code diffs for edge-case coverage, optimal algorithmic complexity, zero hardcoded secrets/tokens, and strict data type safety.
 - Treat any syntax, security, or logic flags as test failures. Auto-correct in the next loop iteration before declaring task completion.
 
+### 4. LOCKED UI DESIGN SYSTEM & COLOR PALETTE (MANDATORY & UNALTERABLE)
+- **Design Palette**: Śiṣya Abhyāsa MUST ALWAYS use the **Light Latte & Mint** design system across 100% of frontend pages and components. Black/dark-slate backgrounds (`bg-slate-950`, `bg-slate-900`, `bg-black`) are STRICTLY FORBIDDEN and LOCKED.
+- **Canonical Theme Colors**:
+  - `page background`: Warm Cream / Light Latte (`#e4ddd3` / `#f7f2eb`)
+  - `text color`: Warm Charcoal Ink (`#1a1410`)
+  - `muted text`: `#7a6f67`
+  - `primary accent`: Mint Teal (`#00a19b` / hover `#008782`)
+  - `card background`: Soft Cream (`#eee8df` / `bg-white/80 border border-black/10 shadow-sm rounded-2xl`)
+  - `active pills / buttons`: Dark Charcoal (`#1a1410`) or Mint Teal (`#00a19b`) with white text.
+
 ---
 
 ## Core Protocol

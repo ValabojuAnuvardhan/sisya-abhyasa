@@ -25,48 +25,8 @@ export function AIVerificationCard({ projectId }: AIVerificationCardProps) {
       const data = await getProjectEvaluation(id);
       setEvaluation(data);
     } catch {
-      // Fallback default evaluation if project has not been evaluated yet
-      setEvaluation({
-        id: 'mock-eval-id',
-        project_id: id,
-        overall_score: 94.5,
-        architecture_score: 95.0,
-        code_quality_score: 92.0,
-        testing_score: 88.0,
-        security_score: 96.0,
-        collaboration_score: 90.0,
-        strengths: [
-          'Clean modular architecture with decoupled API routing and SQLAlchemy ORM models.',
-          'Comprehensive error handling and strict Pydantic payload validation.',
-          'High test coverage with automated Playwright and Pytest verification suites.',
-        ],
-        weaknesses: [
-          'Consider adding Redis cache layer for high-throughput skill graph inferencing.',
-        ],
-        resume_bullets: [
-          'Engineered full-stack collaborative platform using Next.js 15 and FastAPI REST APIs.',
-          'Integrated GitHub Telemetry sensors to automate real-time skill evidence extraction.',
-          'Architected decoupled SQLAlchemy schemas supporting automated Alembic migration pipelines.',
-        ],
-        linkedin_summary:
-          '🚀 Built a production-ready monorepo featuring a FastAPI backend, dynamic skill inferencing engine, and evidence-backed recruiter portfolio verified through GitHub telemetry.',
-        interview_questions: [
-          {
-            question: 'How did you ensure backward compatibility when extending existing database models?',
-            suggested_answer:
-              'I used additive Alembic migrations with default column constraints and separate feature tables, preserving existing v1.0.0 contracts.',
-          },
-          {
-            question: 'Explain how your skill graph inferencing engine computes proficiency scores.',
-            suggested_answer:
-              'It aggregates multi-factor telemetry including commit velocity, test coverage, code review participation, and verified evidence cards.',
-          },
-        ],
-        badge_level: 'Production Ready',
-        eval_version: '1.1.0',
-        model_name: 'gemini-3.6-flash',
-        created_at: new Date().toISOString(),
-      });
+      // Set evaluation to null so an explicit un-audited empty state renders
+      setEvaluation(null);
     } finally {
       setLoading(false);
     }
@@ -95,26 +55,68 @@ export function AIVerificationCard({ projectId }: AIVerificationCardProps) {
     return (
       <div
         style={{
-          backgroundColor: '#ffffff',
-          border: '1px solid #e5e7eb',
-          borderRadius: '12px',
+          backgroundColor: 'var(--card-bg)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '18px',
           padding: '24px',
           boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
         }}
       >
-        <p style={{ color: '#6b7280', margin: 0, fontSize: '13px' }}>Evaluating AI Project Verification & Trust Score...</p>
+        <p style={{ color: 'var(--muted)', margin: 0, fontSize: '13px' }}>Evaluating AI Project Verification & Trust Score...</p>
       </div>
     );
   }
 
   const evalData = evaluation;
 
+  if (!evalData) {
+    return (
+      <div
+        style={{
+          backgroundColor: 'var(--card-bg)',
+          border: '1px solid var(--card-border)',
+          borderRadius: '18px',
+          padding: '24px',
+          boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <div>
+          <h3 style={{ fontSize: '15px', fontWeight: '700', color: 'var(--ink)', margin: 0 }}>
+            🛡️ AI Verification & Employability Audit
+          </h3>
+          <p style={{ color: 'var(--muted)', margin: '4px 0 0 0', fontSize: '13px' }}>
+            Project not yet audited. Click 'Run AI Verification' to evaluate codebase evidence.
+          </p>
+        </div>
+        <button
+          onClick={handleRunAudit}
+          disabled={actionLoading}
+          style={{
+            padding: '8px 16px',
+            fontSize: '13px',
+            fontWeight: '600',
+            backgroundColor: 'var(--mint)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: 'pointer',
+          }}
+        >
+          {actionLoading ? 'Auditing...' : '⚡ Run AI Verification'}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
-        backgroundColor: '#ffffff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '12px',
+        backgroundColor: 'var(--card-bg)',
+        border: '1px solid var(--card-border)',
+        borderRadius: '18px',
         padding: '24px',
         boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
         display: 'flex',

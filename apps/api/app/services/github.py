@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.user import User,StudentProfile
-from app.models.github import ProjectRepository,GithubCommit,GithubPullRequest
+from app.models.github import ProjectRepository,GithubCommit,GithubPullRequest,SkillEvidence
 
 def configured():
     return bool(settings.github_app_id and settings.github_app_private_key and settings.github_webhook_secret)
@@ -56,8 +56,27 @@ def process_push(db:Session,repo:ProjectRepository,payload:dict):
 def process_pr(db:Session,repo:ProjectRepository,payload:dict):
     pr=payload.get('pull_request') or {}; actor=pr.get('user') or payload.get('sender') or {}; number=payload.get('number') or pr.get('number')
     if not number:return
+    uid = mapped_user(db, actor)
     row=db.scalar(select(GithubPullRequest).where(GithubPullRequest.repository_id==repo.id,GithubPullRequest.number==number))
-    values=dict(user_id=mapped_user(db,actor),github_actor_id=str(actor.get('id')) if actor.get('id') else None,github_actor_login=actor.get('login'),title=pr.get('title',''),state=pr.get('state','open'),merged=bool(pr.get('merged')),html_url=pr.get('html_url',''),updated_at_github=parse_dt(pr.get('updated_at')))
+    values=dict(user_id=uid,github_actor_id=str(actor.get('id')) if actor.get('id') else None,github_actor_login=actor.get('login'),title=pr.get('title',''),state=pr.get('state','open'),merged=bool(pr.get('merged')),html_url=pr.get('html_url',''),updated_at_github=parse_dt(pr.get('updated_at')))
     if row:
         for k,v in values.items(): setattr(row,k,v)
-    else: db.add(GithubPullRequest(repository_id=repo.id,number=number,**values))
+        pr_obj = row
+    else:
+        pr_obj = GithubPullRequest(repository_id=repo.id,number=number,**values)
+        db.add(pr_obj)
+        db.flush()
+
+    # Generate verified SkillEvidence for attributable merged PR
+    if values.get('merged') and uid and repo.project_id:
+        existing_ev = db.scalar(select(SkillEvidence).where(SkillEvidence.user_id == uid, SkillEvidence.pull_request_id == pr_obj.id))
+        if not existing_ev:
+            ev = SkillEvidence(
+                user_id=uid,
+                project_id=repo.project_id,
+                pull_request_id=pr_obj.id,
+                skill_name="GitHub Telemetry & Engineering Proof",
+                evidence_kind="github_pr_merged",
+                explanation=f"Merged Pull Request #{number}: {values['title']}"
+            )
+            db.add(ev)

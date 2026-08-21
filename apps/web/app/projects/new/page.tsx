@@ -8,18 +8,30 @@ import Breadcrumbs from '../../../components/Breadcrumbs';
 type Task = {
   title: string;
   description: string;
-  completion_criteria: string;
-  required_skills: string[];
-  resources: string[];
+  completion_criteria?: string;
+  required_skills?: string[];
+  resources?: string[];
+};
+
+type MilestoneItem = {
+  title: string;
+  description?: string;
+  objective?: string;
+  estimated_weeks?: number;
+  tasks?: Task[];
 };
 
 type Plan = {
-  project_summary: string;
-  suggested_stack: string[];
-  completion_definition: string[];
-  milestones: { title: string; objective: string; tasks: Task[] }[];
-  generated_by: 'ai' | 'local-demo';
-  notice: string;
+  title?: string;
+  description?: string;
+  project_summary?: string;
+  tech_stack?: string[];
+  suggested_stack?: string[];
+  skills?: string[];
+  completion_definition?: string[];
+  milestones?: MilestoneItem[];
+  generated_by?: 'ai' | 'local-demo';
+  notice?: string;
 };
 
 function NewProjectForm() {
@@ -55,6 +67,7 @@ function NewProjectForm() {
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim(),
+          idea: `${title.trim()}: ${description.trim()}`,
           difficulty,
           desired_stack: stack.split(',').map((x) => x.trim()).filter(Boolean),
         }),
@@ -89,6 +102,10 @@ function NewProjectForm() {
       setLoading(false);
     }
   }
+
+  const stackList = plan?.tech_stack || plan?.suggested_stack || [];
+  const completionList = plan?.completion_definition || plan?.skills || ['Core business logic implemented', 'Automated test suite passing', 'Evidence bundle verified'];
+  const milestonesList = plan?.milestones || [];
 
   return (
     <main className="shell formPage">
@@ -162,45 +179,56 @@ function NewProjectForm() {
           <div className="resultHead">
             <div>
               <h2 style={{ fontFamily: 'Georgia, serif', margin: '0 0 6px' }}>Proposed Milestone & Task Plan</h2>
-              <p>{plan.notice}</p>
+              <p>{plan.notice || 'Review the proposed architecture plan before creating your workspace.'}</p>
             </div>
-            <span className="tag">{plan.generated_by === 'ai' ? 'AI Architect' : 'Local Demo Architect'}</span>
+            <span className="tag">{plan.generated_by === 'ai' ? 'AI Architect' : 'Project Architect Engine'}</span>
           </div>
 
           <div className="planSummary" style={{ marginTop: 16 }}>
-            <h3 style={{ fontSize: 16, margin: '0 0 8px' }}>Suggested Tech Stack</h3>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-              {plan.suggested_stack.map((s) => (
-                <span className="refChip" key={s}>
-                  {s}
-                </span>
-              ))}
-            </div>
-            <h3 style={{ fontSize: 16, margin: '16px 0 8px' }}>Definition of Completion</h3>
+            {stackList.length > 0 && (
+              <>
+                <h3 style={{ fontSize: 16, margin: '0 0 8px' }}>Suggested Tech Stack</h3>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
+                  {stackList.map((s) => (
+                    <span className="refChip" key={s}>
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </>
+            )}
+            <h3 style={{ fontSize: 16, margin: '16px 0 8px' }}>Definition of Completion & Skills</h3>
             <ul>
-              {plan.completion_definition.map((x) => (
+              {completionList.map((x) => (
                 <li key={x}>{x}</li>
               ))}
             </ul>
           </div>
 
-          {plan.milestones.map((m, i) => (
-            <article className="milestone" key={m.title}>
-              <span className="tag">Milestone {i + 1}</span>
+          {milestonesList.map((m, i) => (
+            <article className="milestone" key={m.title || i}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="tag">Milestone {i + 1}</span>
+                {m.estimated_weeks && <span style={{ fontSize: 12, color: 'var(--muted)' }}>~{m.estimated_weeks} week(s)</span>}
+              </div>
               <h2 style={{ fontSize: 22, margin: '8px 0 4px', fontFamily: 'Georgia, serif' }}>{m.title}</h2>
-              <p style={{ color: 'var(--muted)', fontSize: 14 }}>{m.objective}</p>
-              {m.tasks.map((t, j) => (
-                <div className="task" key={t.title}>
+              <p style={{ color: 'var(--muted)', fontSize: 14 }}>{m.description || m.objective}</p>
+              {m.tasks && m.tasks.map((t, j) => (
+                <div className="task" key={t.title || j}>
                   <strong>
                     Task {j + 1}: {t.title}
                   </strong>
                   <p style={{ fontSize: 14 }}>{t.description}</p>
-                  <small>
-                    <b>Done criteria:</b> {t.completion_criteria}
-                  </small>
-                  <small style={{ marginTop: 4 }}>
-                    <b>Skills to practice:</b> {t.required_skills.join(' · ')}
-                  </small>
+                  {t.completion_criteria && (
+                    <small>
+                      <b>Done criteria:</b> {t.completion_criteria}
+                    </small>
+                  )}
+                  {t.required_skills && t.required_skills.length > 0 && (
+                    <small style={{ marginTop: 4 }}>
+                      <b>Skills to practice:</b> {t.required_skills.join(' · ')}
+                    </small>
+                  )}
                 </div>
               ))}
             </article>
