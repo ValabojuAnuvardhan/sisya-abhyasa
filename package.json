@@ -9,8 +9,10 @@
     "typecheck": "cd apps/web && npm run typecheck"
   },
   "dependencies": {
+    "next": "^15.0.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "lucide-react": "^1.30.0"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
