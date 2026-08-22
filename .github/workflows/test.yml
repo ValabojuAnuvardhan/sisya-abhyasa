@@ -27,6 +27,7 @@ jobs:
         run: |
           cd apps/api
           pip install -r requirements.txt pytest
+          rm -f ci_test.db test.db
           python -m pytest -o pythonpath=. tests/
 
       - name: Build Next.js Web

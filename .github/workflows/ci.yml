@@ -28,10 +28,12 @@ jobs:
       - name: Run pytest
         working-directory: apps/api
         env:
-          DATABASE_URL: "sqlite:///./test.db"
-          SISYA_DATABASE_URL: "sqlite:///./test.db"
+          DATABASE_URL: "sqlite:///./ci_test.db"
+          SISYA_DATABASE_URL: "sqlite:///./ci_test.db"
           PYTHONPATH: "."
-        run: python -m pytest -o pythonpath=. tests/
+        run: |
+          rm -f ci_test.db test.db
+          python -m pytest -o pythonpath=. tests/
 
   web-build:
     name: Web Production Build
