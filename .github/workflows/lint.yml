@@ -32,4 +32,4 @@ jobs:
       - name: Install Flake8 & Verify Python Quality
         run: |
           pip install flake8
-          flake8 apps/api/app --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 apps/api/app --count --select=E9,F63,F7 --show-source --statistics

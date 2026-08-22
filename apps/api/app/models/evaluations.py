@@ -5,6 +5,7 @@ Includes Dynamic Skill Proficiencies, AI Mentor Observations, Reproducible Proje
 and Recruiter Profile Preferences.
 """
 
+from __future__ import annotations
 import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Integer, String, Text, JSON, func
