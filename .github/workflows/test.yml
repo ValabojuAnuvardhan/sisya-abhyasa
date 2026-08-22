@@ -17,26 +17,28 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Execute API Unit Tests
-        env:
-          DATABASE_URL: "sqlite:///./test.db"
-          SISYA_DATABASE_URL: "sqlite:///./test.db"
-          PYTHONPATH: "."
         run: |
           cd apps/api
           pip install -r requirements.txt pytest
           pytest tests/
 
+      - name: Build Frontend
+        run: |
+          npm run build
+
+      - name: Start Frontend Dev Server
+        run: |
+          npm run preview &
+          npx wait-on http://localhost:5173 --timeout 30000
+
       - name: Execute E2E Tests
         run: |
-          npm ci
           npx playwright install --with-deps chromium
           npx playwright test
