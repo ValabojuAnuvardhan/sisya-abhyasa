@@ -27,7 +27,7 @@ type AuthContextType = {
   error: string | null;
   refetchUser: () => Promise<UserProfile | null>;
   logout: () => Promise<void>;
-  saveAuthToken: (token: string) => void;
+  saveAuthToken: (token: string, userId?: string, email?: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -65,8 +65,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refetchUser();
   }, [refetchUser]);
 
-  const saveAuthToken = (token: string) => {
-    setAuthToken(token);
+  const saveAuthToken = (token: string, userId?: string, email?: string) => {
+    setAuthToken(token, userId, email);
     refetchUser();
   };
 
