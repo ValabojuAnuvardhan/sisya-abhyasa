@@ -17,13 +17,21 @@ export function getUserId(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-export function setAuthToken(token: string, userId?: string): void {
+export function getUserEmail(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('sisya_user_email');
+}
+
+export function setAuthToken(token: string, userId?: string, email?: string): void {
   if (typeof window !== 'undefined') {
     localStorage.setItem('sisya_auth_token', token);
     document.cookie = `sisya_auth_token=${encodeURIComponent(token)}; path=/; max-age=86400; SameSite=Lax`;
     if (userId) {
       localStorage.setItem('sisya_user_id', userId);
       document.cookie = `sisya_user_id=${encodeURIComponent(userId)}; path=/; max-age=86400; SameSite=Lax`;
+    }
+    if (email) {
+      localStorage.setItem('sisya_user_email', email);
     }
   }
 }
@@ -32,9 +40,70 @@ export function clearAuthToken(): void {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('sisya_auth_token');
     localStorage.removeItem('sisya_user_id');
+    localStorage.removeItem('sisya_user_email');
     document.cookie = 'sisya_auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     document.cookie = 'sisya_user_id=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
   }
+}
+
+const STUDENT_DIRECTORY: Record<string, { name: string; role: string; year: string; skills: string[] }> = {
+  'student1@gmail.com': { name: 'Alex Rivera', role: 'Full Stack Engineer', year: 'Junior (Year 3)', skills: ['React', 'TypeScript', 'Python', 'FastAPI'] },
+  'student2@gmail.com': { name: 'Priya Patel', role: 'AI & Machine Learning Engineer', year: 'Senior (Year 4)', skills: ['Python', 'PyTorch', 'FastAPI', 'Transformers'] },
+  'student3@gmail.com': { name: 'Arun Sharma', role: 'Backend Systems Architect', year: 'Senior (Year 4)', skills: ['Go', 'PostgreSQL', 'Docker', 'Kubernetes'] },
+  'student4@gmail.com': { name: 'Sophia Chen', role: 'Frontend UI/UX Developer', year: 'Sophomore (Year 2)', skills: ['Next.js', 'TailwindCSS', 'React', 'Figma'] },
+  'student5@gmail.com': { name: 'David Miller', role: 'DevOps & Cloud Specialist', year: 'Junior (Year 3)', skills: ['AWS', 'Terraform', 'Docker', 'CI/CD'] },
+  'student6@gmail.com': { name: 'Ananya Roy', role: 'Data Engineer', year: 'Junior (Year 3)', skills: ['Python', 'Spark', 'SQL', 'Airflow'] },
+  'student7@gmail.com': { name: 'Liam Wilson', role: 'Mobile App Developer', year: 'Sophomore (Year 2)', skills: ['Flutter', 'Dart', 'Firebase', 'iOS'] },
+  'student8@gmail.com': { name: 'Zara Ahmed', role: 'Cybersecurity & Security Engineer', year: 'Senior (Year 4)', skills: ['Python', 'Ethical Hacking', 'Cryptography', 'OAuth'] },
+  'student9@gmail.com': { name: 'Marcus Vance', role: 'Distributed Systems Engineer', year: 'Senior (Year 4)', skills: ['Rust', 'gRPC', 'Kafka', 'Linux'] },
+  'student10@gmail.com': { name: 'Elena Rostova', role: 'QA Automation Engineer', year: 'Junior (Year 3)', skills: ['Playwright', 'Python', 'Pytest', 'Jest'] },
+  'student11@gmail.com': { name: 'Rohan Gupta', role: 'Cloud Native Specialist', year: 'Junior (Year 3)', skills: ['GCP', 'Docker', 'Next.js', 'GraphQL'] },
+  'student12@gmail.com': { name: 'Emma Watson', role: 'Product Engineer', year: 'Sophomore (Year 2)', skills: ['React', 'Node.js', 'Product Analytics', 'CSS'] },
+  'student13@gmail.com': { name: 'Karthik Nair', role: 'Embedded & IoT Developer', year: 'Senior (Year 4)', skills: ['C++', 'Python', 'Raspberry Pi', 'MQTT'] },
+  'student14@gmail.com': { name: 'Chloe Bennett', role: 'Frontend Performance Specialist', year: 'Junior (Year 3)', skills: ['JavaScript', 'Web Vitals', 'React', 'Redux'] },
+  'student15@gmail.com': { name: 'Vikram Singh', role: 'Database Architect', year: 'Senior (Year 4)', skills: ['PostgreSQL', 'Redis', 'Elasticsearch', 'SQL'] },
+  'student16@gmail.com': { name: 'Maya Lin', role: 'NLP & LLM Engineer', year: 'Senior (Year 4)', skills: ['LangChain', 'Python', 'OpenAI', 'Vector DBs'] },
+  'student17@gmail.com': { name: 'Noah Taylor', role: 'Site Reliability Engineer', year: 'Junior (Year 3)', skills: ['Prometheus', 'Grafana', 'Python', 'Bash'] },
+  'student18@gmail.com': { name: 'Aaliyah Khan', role: 'Microservices Architect', year: 'Senior (Year 4)', skills: ['Java', 'Spring Boot', 'Docker', 'RabbitMQ'] },
+  'student19@gmail.com': { name: 'James O\'Connor', role: 'Blockchain Developer', year: 'Junior (Year 3)', skills: ['Solidity', 'Ethers.js', 'TypeScript', 'Hardhat'] },
+  'student20@gmail.com': { name: 'Tanya Verma', role: 'Core Software Engineering Specialist', year: 'Senior (Year 4)', skills: ['C++', 'Algorithms', 'System Design', 'Python'] }
+};
+
+export function getStudentProfileForEmail(email: string) {
+  const cleanEmail = (email || 'student1@gmail.com').trim().toLowerCase();
+  if (STUDENT_DIRECTORY[cleanEmail]) {
+    const s = STUDENT_DIRECTORY[cleanEmail];
+    return {
+      id: `student-id-${cleanEmail.replace(/[^a-z0-9]/g, '-')}`,
+      email: cleanEmail,
+      full_name: s.name,
+      target_role: s.role,
+      experience_level: 'Intermediate',
+      education_year: s.year,
+      onboarding_completed: true,
+      profile_public: true,
+      skills: s.skills.map((sk, idx) => ({ id: String(idx + 1), name: sk, slug: sk.toLowerCase().replace(/[^a-z0-9]/g, '-') }))
+    };
+  }
+
+  const username = cleanEmail.split('@')[0];
+  const nameParts = username.split(/[._-]/).map(p => p.charAt(0).toUpperCase() + p.slice(1));
+  const fullName = nameParts.join(' ') || 'Student User';
+  return {
+    id: `student-id-${cleanEmail.replace(/[^a-z0-9]/g, '-')}`,
+    email: cleanEmail,
+    full_name: fullName,
+    target_role: 'Software Engineer',
+    experience_level: 'Intermediate',
+    education_year: 'Junior (Year 3)',
+    onboarding_completed: true,
+    profile_public: true,
+    skills: [
+      { id: '1', name: 'TypeScript', slug: 'typescript' },
+      { id: '2', name: 'React', slug: 'react' },
+      { id: '3', name: 'Python', slug: 'python' }
+    ]
+  };
 }
 
 export async function api<T = any>(path: string, init: RequestInit = {}): Promise<T> {
@@ -81,49 +150,24 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
     }
     // Handle Network Fetch Error gracefully (e.g., when backend is unreachable on Vercel)
     if (path.includes('/auth/token') || path.includes('/auth/login') || path.includes('/auth/register') || path.includes('/auth/session')) {
-      let demoEmail = 'student1@gmail.com';
+      let demoEmail = getUserEmail() || 'student1@gmail.com';
       try {
         if (typeof init.body === 'string') {
           const parsed = JSON.parse(init.body);
           if (parsed.email) demoEmail = parsed.email;
         }
       } catch (e) {}
-      const mockToken = 'demo_auth_token_sisya_' + Date.now();
+      setAuthToken('demo_auth_token_sisya_' + Date.now(), `student-id-${demoEmail.replace(/[^a-z0-9]/g, '-')}`, demoEmail);
+      const studentProfile = getStudentProfileForEmail(demoEmail);
       return {
-        access_token: mockToken,
+        access_token: 'demo_auth_token_sisya_' + Date.now(),
         token_type: 'bearer',
-        user: {
-          id: 'demo-student-id-1',
-          email: demoEmail,
-          full_name: 'Alex Rivera (Demo)',
-          target_role: 'Full Stack Engineer',
-          experience_level: 'Intermediate',
-          onboarding_completed: true,
-          profile_public: true,
-          skills: [
-            { id: '1', name: 'TypeScript', slug: 'typescript' },
-            { id: '2', name: 'React', slug: 'react' },
-            { id: '3', name: 'Python', slug: 'python' },
-          ]
-        }
+        user: studentProfile
       } as unknown as T;
     }
     if (path === '/me' || path.includes('/me?')) {
-      return {
-        id: 'demo-student-id-1',
-        email: 'student1@gmail.com',
-        full_name: 'Alex Rivera (Demo)',
-        target_role: 'Full Stack Engineer',
-        experience_level: 'Intermediate',
-        education_year: 'Junior',
-        onboarding_completed: true,
-        profile_public: true,
-        skills: [
-          { id: '1', name: 'TypeScript', slug: 'typescript' },
-          { id: '2', name: 'React', slug: 'react' },
-          { id: '3', name: 'Python', slug: 'python' },
-        ]
-      } as unknown as T;
+      const activeEmail = getUserEmail() || 'student1@gmail.com';
+      return getStudentProfileForEmail(activeEmail) as unknown as T;
     }
     throw new Error(err.message || 'Unable to connect to backend server. Please verify network connection.');
   }
@@ -183,7 +227,7 @@ export async function loginStudent(email: string, password: string): Promise<{ t
     body: JSON.stringify({ email, password }),
   });
   if (res.token && res.user_id) {
-    setAuthToken(res.token, res.user_id);
+    setAuthToken(res.token, res.user_id, email);
   }
   return res;
 }
@@ -194,7 +238,7 @@ export async function registerStudent(email: string, password: string, github_ur
     body: JSON.stringify({ email, password, github_url }),
   });
   if (res.token && res.user_id) {
-    setAuthToken(res.token, res.user_id);
+    setAuthToken(res.token, res.user_id, email);
   }
   return res;
 }
