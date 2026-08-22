@@ -48,8 +48,9 @@ def test_day_4_kanban_and_mentor_suite():
     project_id = proj_resp.json()["id"]
 
     # 3. Create a Milestone directly in DB for testing
+    import uuid as uuid_lib
     db_session = SessionLocal()
-    milestone = Milestone(project_id=project_id, title="Sprint 1 Core Services", completion_pct=0)
+    milestone = Milestone(project_id=uuid_lib.UUID(project_id), title="Sprint 1 Core Services", completion_pct=0)
     db_session.add(milestone)
     db_session.commit()
     db_session.refresh(milestone)
@@ -110,7 +111,7 @@ def test_day_4_kanban_and_mentor_suite():
     assert move_done_resp.status_code == 200
 
     db_session = SessionLocal()
-    ms_db = db_session.query(Milestone).filter(Milestone.id == milestone_id).first()
+    ms_db = db_session.query(Milestone).filter(Milestone.id == uuid_lib.UUID(milestone_id)).first()
     # 1 task is done out of 2 total tasks = 50% completion
     assert ms_db.completion_pct == 50
     db_session.close()

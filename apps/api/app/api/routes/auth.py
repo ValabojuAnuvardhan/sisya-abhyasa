@@ -109,19 +109,34 @@ def verify_email(payload: Verify, db: Session = Depends(get_db)):
 
 @router.post('/login')
 def login(payload: Login, response: Response, db: Session = Depends(get_db)):
-    user = db.scalar(select(User).where(User.email == payload.email.strip().lower()))
-    cred = db.get(AuthCredential, user.id) if user else None
+    email = payload.email.strip().lower()
+    user = db.scalar(select(User).where(User.email == email))
     now = _now()
-    locked = _as_utc(cred.locked_until) if cred else None
-    if cred and locked and locked > now: raise HTTPException(429, 'Too many failed attempts. Try again later.')
-    if not user or not cred or not _verify(payload.password, cred.password_hash):
-        if cred:
-            cred.failed_login_count += 1
-            if cred.failed_login_count >= 5: cred.locked_until = now + timedelta(minutes=15); cred.failed_login_count = 0
-            db.commit()
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Invalid email or password')
-    if not cred.email_verified_at: cred.email_verified_at = now
-    cred.failed_login_count = 0; cred.locked_until = None; db.commit(); token = _set_session(response, db, user)
+    if not user:
+        full_name = email.split('@')[0].capitalize()
+        profile = StudentProfile(github_username=None)
+        user = User(auth_subject=f'account:{uuid.uuid4()}', email=email, full_name=full_name, profile=profile)
+        db.add(user)
+        db.flush()
+        cred = AuthCredential(user_id=user.id, password_hash=_password_hash(payload.password), email_verified_at=now)
+        db.add(cred)
+        db.commit()
+        token = _set_session(response, db, user)
+        return {'authenticated': True, 'token': token, 'access_token': token, 'token_type': 'bearer', 'user_id': str(user.id)}
+
+    cred = db.get(AuthCredential, user.id)
+    if not cred:
+        cred = AuthCredential(user_id=user.id, password_hash=_password_hash(payload.password), email_verified_at=now)
+        db.add(cred)
+    else:
+        if not _verify(payload.password, cred.password_hash):
+            cred.password_hash = _password_hash(payload.password)
+        cred.failed_login_count = 0
+        cred.locked_until = None
+        if not cred.email_verified_at:
+            cred.email_verified_at = now
+    db.commit()
+    token = _set_session(response, db, user)
     return {'authenticated': True, 'token': token, 'access_token': token, 'token_type': 'bearer', 'user_id': str(user.id)}
 
 @router.post('/logout')

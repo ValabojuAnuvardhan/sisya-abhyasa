@@ -118,8 +118,8 @@ Student Question: {body.message}"""
                 project = find_by_id(Project, db, task.project_id)
                 if project and str(project.owner_id) != str(current_user.id):
                     member = db.query(ProjectMember).filter(
-                        (ProjectMember.project_id == str(project.id)) | (ProjectMember.project_id == project.id),
-                        (ProjectMember.user_id == str(current_user.id)) | (ProjectMember.user_id == current_user.id),
+                        ProjectMember.project_id == project.id,
+                        ProjectMember.user_id == current_user.id,
                         ProjectMember.status == "approved"
                     ).first()
                     if not member:

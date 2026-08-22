@@ -71,3 +71,6 @@ Thumbs.db
 
 # Platform Deployments
 .vercel/
+
+.vercel
+.env*

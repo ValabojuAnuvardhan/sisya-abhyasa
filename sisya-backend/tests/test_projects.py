@@ -62,9 +62,10 @@ def test_project_creation_and_listing():
 
     # 4. Verify ProjectMember auto-created with role="owner"
     db_session = SessionLocal()
+    import uuid as uuid_lib
     member = db_session.query(ProjectMember).filter(
-        ProjectMember.project_id == project_id,
-        ProjectMember.user_id == user_id
+        ProjectMember.project_id == uuid_lib.UUID(project_id),
+        ProjectMember.user_id == uuid_lib.UUID(user_id)
     ).first()
     assert member is not None
     assert member.role == "owner"
