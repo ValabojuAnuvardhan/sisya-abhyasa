@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint:
-    name: ESLint & Flake8 Verification
+    name: Code Quality & Lint Verification
     runs-on: ubuntu-latest
 
     steps:
@@ -17,18 +17,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install Node Dependencies & Lint
+      - name: Build Next.js Web Typecheck
         run: |
-          npm ci
-          npm run lint
+          cd apps/web
+          npm install
+          npx next build
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Install Flake8 & Verify Python Quality
         run: |
