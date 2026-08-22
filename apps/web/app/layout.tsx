@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { AuthProvider } from '../lib/auth-context';
-import Navbar from '../components/Navbar';
+import AppLayout from '../components/AppLayout';
 
 export const metadata: Metadata = {
   title: 'Śiṣya Abhyāsa | AI-Powered Collaborative Engineering & Proof-of-Work',
@@ -13,8 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <AuthProvider>
-          <Navbar />
-          {children}
+          <AppLayout>{children}</AppLayout>
         </AuthProvider>
       </body>
     </html>
