@@ -1,10 +1,35 @@
 import React from 'react';
 import Link from 'next/link';
+import FiveStageJourney from '../components/FiveStageJourney';
+import SampleProofCard from '../components/SampleProofCard';
+
+const benefits = [
+  {
+    icon: '🛡️',
+    title: 'Verified Evidence',
+    desc: 'Attributed directly from merged GitHub PRs linked to tasks — never commit counts or unverified claims.'
+  },
+  {
+    icon: '🧠',
+    title: 'Contextual Learning',
+    desc: 'Learn what you need while building with task-scoped completion criteria and an AI Contextual Mentor.'
+  },
+  {
+    icon: '👥',
+    title: 'Peer Collaboration',
+    desc: 'Build together in team spaces with structured Task #N and PR #N mentions and open meeting links.'
+  },
+  {
+    icon: '🔗',
+    title: 'Privacy-Safe Proof',
+    desc: 'Share opaque, recruiter-ready profile links while keeping your private repositories, code, and secrets safe.'
+  }
+];
 
 export default function Home() {
   return (
     <main style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 24px 80px' }}>
-      {/* TOP PILL TAG */}
+      {/* SECTION 1: TOP PILL TAG & HERO HEADER */}
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
         <span
           style={{
@@ -22,7 +47,6 @@ export default function Home() {
         </span>
       </div>
 
-      {/* HERO SECTION */}
       <section style={{ textAlign: 'center', marginBottom: 48 }}>
         <h1
           style={{
@@ -100,8 +124,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW WOULD YOU LIKE TO START SECTION */}
-      <section style={{ marginTop: 60 }}>
+      {/* SECTION 2: HOW WOULD YOU LIKE TO START CARDS */}
+      <section style={{ marginTop: 40, marginBottom: 60 }}>
         <h2
           style={{
             fontSize: 26,
@@ -204,6 +228,62 @@ export default function Home() {
               Browse Open Teams →
             </div>
           </Link>
+        </div>
+      </section>
+
+      {/* SECTION 3: FIVE STAGE PRODUCT JOURNEY */}
+      <FiveStageJourney />
+
+      {/* SECTION 4: PROBLEM VS SOLUTION SECTION */}
+      <section className="problemSection" style={{ marginTop: 60 }} aria-labelledby="problem-heading">
+        <div className="sectionHeader">
+          <span className="tag">Why Śiṣya Abhyāsa</span>
+          <h2 id="problem-heading" style={{ fontFamily: 'Georgia, serif', fontSize: 36, margin: '12px 0 8px' }}>
+            Certificates Aren’t Enough Anymore
+          </h2>
+          <p className="sectionSub">
+            Recruiters ignore online completion badges and static resume claims. They want to see real evidence of your application skills.
+          </p>
+        </div>
+        <div className="problemGrid">
+          <div className="problemBox">
+            <h3>The Resume & Certificate Problem</h3>
+            <p>
+              Course completion certificates, tutorial clones, and raw commit counts are easily spoofed or copied. They show you watched videos, not that you can solve real technical problems.
+            </p>
+          </div>
+          <div className="solutionBox">
+            <h3>The Evidence-Based Solution</h3>
+            <p>
+              Śiṣya Abhyāsa extracts demonstrated skill evidence directly from merged GitHub Pull Requests linked to project tasks. Your code remains private while your demonstrated skills speak for themselves.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 5: SAMPLE PROOF-OF-WORK SHOWCASE */}
+      <SampleProofCard />
+
+      {/* SECTION 6: KEY PLATFORM BENEFITS */}
+      <section className="benefitsSection" style={{ marginTop: 60 }} aria-labelledby="benefits-heading">
+        <div className="sectionHeader">
+          <span className="tag">Core Capabilities</span>
+          <h2 id="benefits-heading" style={{ fontFamily: 'Georgia, serif', fontSize: 36, margin: '12px 0 8px' }}>
+            Engineered for Student Career Readiness
+          </h2>
+          <p className="sectionSub">
+            Every feature in Śiṣya Abhyāsa connects your learning and project execution directly to verifiable proof.
+          </p>
+        </div>
+
+        <div className="benefitGrid">
+          {benefits.map((b) => (
+            <article className="benefitCard" key={b.title}>
+              <div className="benefitIcon">{b.icon}</div>
+              <h3>{b.title}</h3>
+              <p>{b.desc}</p>
+            </article>
+          ))}
         </div>
       </section>
     </main>
