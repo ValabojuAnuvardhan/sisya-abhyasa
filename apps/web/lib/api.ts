@@ -1,4 +1,13 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API = BASE_URL.endsWith('/api/v1') ? BASE_URL : `${BASE_URL.replace(/\/$/, '')}/api/v1`;
+
+function getFullUrl(path: string): string {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  if (cleanPath.startsWith('/api/v1')) {
+    return `${BASE_URL.replace(/\/api\/v1\/?$/, '')}${cleanPath}`;
+  }
+  return `${API}${cleanPath}`;
+}
 
 export function getAuthToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -46,7 +55,8 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
     headers.set('Authorization', `Bearer ${token}`);
   }
 
-  const res = await fetch(`${API}${path}`, {
+  const url = getFullUrl(path);
+  const res = await fetch(url, {
     ...init,
     headers,
     cache: 'no-store',
