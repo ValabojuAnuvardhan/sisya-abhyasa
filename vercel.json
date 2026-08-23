@@ -1,7 +1,0 @@
-{
-  "services": {
-    "web": {
-      "root": "apps/web"
-    }
-  }
-}
