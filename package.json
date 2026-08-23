@@ -3,10 +3,10 @@
   "private": true,
   "version": "1.1.0",
   "scripts": {
-    "dev": "cd apps/web && npm run dev",
-    "build": "cd apps/web && npm run build && node -e \"const fs=require('fs'); if(fs.existsSync('apps/web/.next')){fs.cpSync('apps/web/.next', '.next', {recursive:true});}\"",
-    "lint": "cd apps/web && npm run lint",
-    "typecheck": "cd apps/web && npm run typecheck"
+    "dev": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/web && node -e \"const fs=require('fs'); if(fs.existsSync('apps/web/.next')){fs.cpSync('apps/web/.next', '.next', {recursive:true});}\"",
+    "lint": "npm run lint --prefix apps/web",
+    "typecheck": "npm run typecheck --prefix apps/web"
   },
   "dependencies": {
     "next": "^15.0.0",
