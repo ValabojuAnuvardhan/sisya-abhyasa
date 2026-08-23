@@ -1,0 +1,6 @@
+sisya-backend/
+apps/api/
+.archive/
+scratch/
+.pytest_cache/
+__pycache__/
