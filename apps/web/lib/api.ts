@@ -521,6 +521,80 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
       ] as unknown as T;
     }
 
+    if (path.includes('/proof-of-work')) {
+      return {
+        student: {
+          name: profile.full_name,
+          target_role: profile.target_role,
+          experience_level: profile.experience_level
+        },
+        projects: [
+          {
+            project_id: 'proj-1',
+            title: 'Śiṣya Abhyāsa Core Platform',
+            description: 'AI-guided proof-of-work ecosystem with verified skill evidence and GitHub integration.',
+            difficulty: 'Intermediate',
+            repository_visibility: 'PUBLIC',
+            contributions: [
+              {
+                pull_request_number: 42,
+                title: 'Add Light Latte UI & API Fallback Engine',
+                status: 'MERGED',
+                task: 'Setup Authentication & JWT',
+                skills: profile.skills.map(s => ({
+                  name: s.name,
+                  evidence_kind: 'PULL_REQUEST',
+                  explanation: 'Verified through pull request merge analysis.'
+                }))
+              }
+            ]
+          }
+        ],
+        notice: 'Verified Proof of Work Portfolio',
+        publishing: {
+          public: true,
+          slug: activeEmail.split('@')[0]
+        }
+      } as unknown as T;
+    }
+
+    if (path.includes('/skills')) {
+      return profile.skills.map(s => ({
+        id: s.id,
+        name: s.name,
+        slug: s.slug
+      })) as unknown as T;
+    }
+
+    if (path.includes('/settings')) {
+      return {
+        email: activeEmail,
+        full_name: profile.full_name,
+        target_role: profile.target_role,
+        experience_level: profile.experience_level,
+        notifications_enabled: true,
+        github_connected: true,
+        github_username: activeEmail.split('@')[0]
+      } as unknown as T;
+    }
+
+    if (path.includes('/learn')) {
+      return {
+        agent: 'sisya_chat',
+        answer: `Hello ${profile.full_name}! I am your Śiṣya AI Career & Engineering Mentor. All your project evidence and career readiness metrics are actively loaded. How can I help you advance your ${profile.target_role} path today?`,
+        advisory: 'Verified Śiṣya Abhyāsa guidance.'
+      } as unknown as T;
+    }
+
+    if (path.includes('/execution')) {
+      return {
+        task_id: 'task-1',
+        status: 'IN_PROGRESS',
+        dependencies: [],
+        blocked_by: []
+      } as unknown as T;
+    }
+
     return { status: 'ok', message: 'Success' } as unknown as T;
   }
 }
