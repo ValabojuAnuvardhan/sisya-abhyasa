@@ -29,16 +29,16 @@ type ProjectEvidence = {
 };
 
 type ProofData = {
-  student: {
-    name: string;
-    target_role: string | null;
-    experience_level: string | null;
+  student?: {
+    name?: string;
+    target_role?: string | null;
+    experience_level?: string | null;
   };
-  projects: ProjectEvidence[];
-  notice: string;
-  publishing: {
-    public: boolean;
-    slug: string | null;
+  projects?: ProjectEvidence[];
+  notice?: string;
+  publishing?: {
+    public?: boolean;
+    slug?: string | null;
   };
 };
 
@@ -52,7 +52,7 @@ export default function Proof() {
     try {
       setLoading(true);
       const res = await api('/proof-of-work/me');
-      setD(res);
+      setD(res || {});
     } catch (e: any) {
       setErr(e.message || 'Could not load Proof-of-Work data');
     } finally {
@@ -67,7 +67,7 @@ export default function Proof() {
   async function toggle() {
     setBusy(true);
     try {
-      await api(d?.publishing.public ? '/proof-of-work/unpublish' : '/proof-of-work/publish', { method: 'POST' });
+      await api(d?.publishing?.public ? '/proof-of-work/unpublish' : '/proof-of-work/publish', { method: 'POST' });
       await load();
     } catch (e: any) {
       setErr(e.message);
@@ -87,7 +87,7 @@ export default function Proof() {
     );
   }
 
-  if (err || !d) {
+  if (err) {
     return (
       <main className="shell formPage">
         <Breadcrumbs />
@@ -98,15 +98,23 @@ export default function Proof() {
     );
   }
 
+  const studentName = d?.student?.name || 'Student';
+  const targetRole = d?.student?.target_role || 'Software Engineering Student';
+  const expLevel = d?.student?.experience_level || 'Intermediate Level';
+  const isPublic = d?.publishing?.public ?? true;
+  const slug = d?.publishing?.slug || 'student';
+  const projects = d?.projects || [];
+  const notice = d?.notice || 'Verified Proof of Work';
+
   return (
     <main className="shell formPage">
       <Breadcrumbs />
       <span className="tag">Proof-of-Work Portfolio</span>
       <h1 style={{ fontSize: 36, margin: '12px 0 8px', fontFamily: 'Georgia, serif' }}>
-        {d.student.name}'s Verified Evidence
+        {studentName}'s Verified Evidence
       </h1>
       <p className="lead">
-        {d.student.target_role || 'Software Engineering Student'} · {d.student.experience_level || 'Intermediate Level'}
+        {targetRole} · {expLevel}
       </p>
 
       {/* PRIVACY ASSURANCE BANNER */}
@@ -142,15 +150,15 @@ export default function Proof() {
         <div>
           <h3 style={{ margin: '0 0 4px', fontSize: 16, fontFamily: 'Georgia, serif' }}>Public Link Visibility</h3>
           <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)' }}>
-            {d.publishing.public ? '🟢 Your portfolio is live and accessible via public link.' : '🔒 Your portfolio is currently private.'}
+            {isPublic ? '🟢 Your portfolio is live and accessible via public link.' : '🔒 Your portfolio is currently private.'}
           </p>
         </div>
         <div className="actions left" style={{ margin: 0 }}>
           <button className="btn primary" disabled={busy} onClick={toggle}>
-            {busy ? 'Updating…' : d.publishing.public ? 'Unpublish Portfolio' : 'Publish Portfolio'}
+            {busy ? 'Updating…' : isPublic ? 'Unpublish Portfolio' : 'Publish Portfolio'}
           </button>
-          {d.publishing.public && d.publishing.slug && (
-            <a className="btn secondary" href={`/p/${d.publishing.slug}`} target="_blank" rel="noreferrer">
+          {isPublic && slug && (
+            <a className="btn secondary" href={`/p/${slug}`} target="_blank" rel="noreferrer">
               🔗 Open Public Profile
             </a>
           )}
@@ -161,7 +169,7 @@ export default function Proof() {
       <section className="planReview">
         <h2 style={{ fontSize: 24, margin: '0 0 16px', fontFamily: 'Georgia, serif' }}>Evidence-Backed Projects</h2>
 
-        {d.projects.length === 0 ? (
+        {projects.length === 0 ? (
           <div className="notice" style={{ padding: '24px 20px', textAlign: 'center' }}>
             <p style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 600 }}>No publishable evidence recorded yet.</p>
             <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)' }}>
@@ -169,18 +177,18 @@ export default function Proof() {
             </p>
           </div>
         ) : (
-          d.projects.map((p) => (
-            <article className="card" key={p.project_id} style={{ marginBottom: 20 }}>
+          projects.map((p) => (
+            <article className="card" key={p.project_id || p.title} style={{ marginBottom: 20 }}>
               <span className="tag" style={{ fontSize: 11 }}>
-                {p.difficulty} · {p.repository_visibility}
+                {p.difficulty || 'Intermediate'} · {p.repository_visibility || 'PUBLIC'}
               </span>
               <h3 style={{ fontSize: 20, margin: '8px 0 6px', fontFamily: 'Georgia, serif' }}>{p.title}</h3>
               <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 16 }}>{p.description}</p>
 
-              {p.contributions.map((c) => (
+              {(p.contributions || []).map((c) => (
                 <div
                   className="task"
-                  key={c.pull_request_number}
+                  key={c.pull_request_number || c.title}
                   style={{
                     background: 'rgba(0,0,0,0.02)',
                     padding: 14,
@@ -199,7 +207,7 @@ export default function Proof() {
                     </small>
                   )}
 
-                  {c.skills.map((s) => (
+                  {(c.skills || []).map((s) => (
                     <div key={s.name} style={{ marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                       <span className="tag" style={{ fontSize: 11, background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)' }}>
                         ✓ {s.name} · Demonstrated
@@ -215,7 +223,7 @@ export default function Proof() {
       </section>
 
       <p className="note" style={{ marginTop: 32 }}>
-        {d.notice}
+        {notice}
       </p>
     </main>
   );
