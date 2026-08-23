@@ -125,9 +125,6 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
 
     if (res.status === 401) {
       clearAuthToken();
-      if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/register') && !window.location.pathname.startsWith('/auth')) {
-        window.location.href = '/login';
-      }
       const errData = await res.json().catch(() => ({ detail: 'Invalid credentials' }));
       throw new Error(errData.detail || 'Unauthorized');
     }
@@ -280,8 +277,10 @@ export async function api<T = any>(path: string, init: RequestInit = {}): Promis
           tasks: []
         }
       ];
-      if (path.replace('/projects/', '').replace('/projects', '').length > 2) {
-        const found = sampleProjects.find(p => path.includes(p.id)) || sampleProjects[0];
+      const cleanSubpath = path.replace('/projects/', '').replace('/projects', '').replace('/', '').trim();
+      const isSingleProjectPage = cleanSubpath.length > 0 && !cleanSubpath.startsWith('discover') && !cleanSubpath.startsWith('new');
+      if (isSingleProjectPage) {
+        const found = sampleProjects.find(p => cleanSubpath.includes(p.id)) || sampleProjects[0];
         return found as unknown as T;
       }
       return sampleProjects as unknown as T;
